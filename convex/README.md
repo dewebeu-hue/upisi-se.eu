@@ -25,10 +25,24 @@ Detaljna dokumentacija modela podataka je u `docs/data-model.md`.
 Za lokalni Convex development pokreni:
 
 ```bash
-npx.cmd convex dev
+npm run convex:dev
 ```
 
 Ova naredba može tražiti lokalni Convex login i inicijalizaciju projekta. Production deploy nije dio ovog koraka.
+
+## Production deploy
+
+Za production deployment funkcija koristi:
+
+```bash
+npm run convex:deploy:prod
+```
+
+U trenutno instaliranom Convex CLI-ju `convex deploy` po defaultu deploya production deployment. Opcija `--deployment production` nije dostupna u ovom CLI-ju. Ako je u shellu postavljen preview `CONVEX_DEPLOY_KEY`, naredba može deployati preview, zato za production koristi production deploy key ili lokalni login povezan s production projektom.
+
+Prije deploya postavi `TOKEN_PEPPER` u Convex Dashboardu na Production deploymentu. Nakon deploya provjeri Production -> Functions i potvrdi da postoje `lexicons:*` i `entries:*` funkcije.
+
+Detaljan runbook je u `docs/production-setup.md`.
 
 ## Funkcije
 

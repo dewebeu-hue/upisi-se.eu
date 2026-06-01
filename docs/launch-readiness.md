@@ -51,6 +51,8 @@ NEXT_PUBLIC_SITE_URL=https://upisi-se.eu
 
 - [ ] Production deployment je u EU regiji.
 - [ ] Schema validation prolazi.
+- [ ] Production deployment ima deployane funkcije u Convex Dashboard -> Production -> Functions.
+- [ ] Ako Production pokazuje `No functions in this deployment, yet.`, pokrenut je `npm run convex:deploy:prod`.
 - [ ] Ako postoje legacy `lexicons` dokumenti, odrađen je `backfillLexiconDefaults`.
 - [ ] `TOKEN_PEPPER` je postavljen u Convex env varijablama gdje ga Convex funkcije čitaju.
 - [ ] `createLexicon` radi.
@@ -78,6 +80,12 @@ Ako se Convex deploy veže uz Vercel build, očekivani production build može bi
 
 ```bash
 npx convex deploy --cmd 'npm run build'
+```
+
+Za prvi ručni fix production funkcija koristi se:
+
+```bash
+npm run convex:deploy:prod
 ```
 
 Trenutni repo ne mijenja build command automatski. Ovo je ručni production korak dok se ne potvrdi Vercel/Convex setup.

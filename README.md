@@ -70,10 +70,32 @@ npm.cmd run typecheck
 npm.cmd run test
 npm.cmd run build
 npm.cmd run qa
+npm.cmd run deploy:check
 ```
 
 Ručni QA checklist je u [docs/local-qa-checklist.md](docs/local-qa-checklist.md).
 Launch readiness checklist je u [docs/launch-readiness.md](docs/launch-readiness.md).
+Production setup i Convex deploy runbook su u [docs/production-setup.md](docs/production-setup.md).
+
+## Production deploy
+
+Convex production funkcije moraju biti deployane prije Vercel production redeploya. Ako Vercel koristi production Convex URL, a Convex Production nema funkcije, aplikacija će prijaviti da ne može pronaći javnu funkciju poput `lexicons:getPublicLexiconBySlug`.
+
+Ručni production fix:
+
+```bash
+npm run convex:deploy:prod
+```
+
+Zatim u Convex Dashboardu provjeri Production -> Functions i napravi Vercel redeploy.
+
+Ako želiš da Vercel build automatski deploya Convex, koristi production deploy key u Vercelu i build command:
+
+```bash
+npx convex deploy --cmd 'npm run build'
+```
+
+Ne koristiti preview deploy key za production. Stvarne tajne ne idu u repo.
 
 ## Scope granice
 
