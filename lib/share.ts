@@ -1,4 +1,4 @@
-export { createAbsoluteUrl, getSiteUrl } from "@/lib/site-url";
+export { createAbsoluteUrl, getSiteUrl } from "./site-url.ts";
 
 export function createWhatsAppShareUrl(text: string, url: string): string {
   return `https://wa.me/?text=${encodeURIComponent(`${text}\n${url}`)}`;
@@ -34,4 +34,30 @@ export function createAfterEntryShareText(
   ]
     .filter(Boolean)
     .join("\n");
+}
+
+export function createQuizResultShareText({
+  lexiconTitle,
+  ownerName,
+  resultTitle,
+  score,
+  totalRounds,
+  shareLine,
+}: {
+  lexiconTitle: string;
+  ownerName: string;
+  resultTitle: string;
+  score: number;
+  totalRounds: number;
+  shareLine: string;
+}): string {
+  const firstName = ownerName.trim() || "ekipinom";
+  const title = lexiconTitle.trim() || "leksikonu";
+
+  return [
+    `Igrala sam "Pogodi čiji je odgovor?" u ${firstName} leksikonu ✨`,
+    `Rezultat: ${score}/${totalRounds} - ${resultTitle}`,
+    shareLine,
+    `Probaj i ti: ${title}`,
+  ].join("\n");
 }

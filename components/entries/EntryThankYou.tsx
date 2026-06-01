@@ -228,7 +228,7 @@ function EntryThankYouInner({ slug }: EntryThankYouProps) {
               </h2>
               <p className="mt-3 text-sm leading-6 text-[var(--color-muted)]">
                 {lexicon.quizUnlocked
-                  ? "Ekipa je skupila dovoljno upisa za budući kviz. Prava igra dolazi u sljedećoj fazi."
+                  ? "Ekipa je skupila dovoljno upisa za kviz. Možeš otvoriti igru, pogoditi čiji je odgovor i podijeliti svoj rezultat."
                   : `Kad se skupi ${lexicon.quizUnlockEntryCount} upisa, bit će dovoljno odgovora za igru "Pogodi čiji je odgovor?". Još ${remainingEntries} do tog trenutka.`}
               </p>
               <ProgressPill

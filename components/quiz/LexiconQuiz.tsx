@@ -13,14 +13,21 @@ import { NotebookHeader } from "@/components/ui/NotebookHeader";
 import { NotebookPaper } from "@/components/ui/NotebookPaper";
 import { ProgressPill } from "@/components/ui/ProgressPill";
 import { Sticker } from "@/components/ui/Sticker";
+import { copyTextToClipboard } from "@/lib/clipboard";
 import { cn } from "@/lib/class-names";
 import { getCoverThemeByValues } from "@/lib/design";
 import {
   lexiconEntryPath,
   lexiconInvitePath,
+  lexiconQuizPath,
   newLexiconPath,
 } from "@/lib/routes";
-import type { QuizRound } from "@/lib/quiz";
+import { getQuizResult, type QuizRound } from "@/lib/quiz";
+import {
+  createAbsoluteUrl,
+  createQuizResultShareText,
+  createWhatsAppShareUrl,
+} from "@/lib/share";
 
 type LexiconQuizProps = {
   slug: string;
@@ -69,6 +76,10 @@ type QuizQueryResult =
 type QuizErrorBoundaryState = {
   hasError: boolean;
 };
+
+const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+const whatsAppButtonClassName =
+  "border-[#128c7e] bg-[#25d366] text-[#0b2d20] shadow-[4px_5px_0_#0b2d20] hover:border-[#075e54] hover:bg-[#1ebe5d] hover:text-[#06281e] focus-visible:outline-[#25d366]";
 
 function QuizShell({ children }: { children: ReactNode }) {
   return (
@@ -157,6 +168,69 @@ function MissingQuizState() {
   );
 }
 
+function QuizProgressBar({
+  current,
+  total,
+}: {
+  current: number;
+  total: number;
+}) {
+  const safeTotal = Math.max(total, 1);
+  const percentage = Math.min(Math.max((current / safeTotal) * 100, 0), 100);
+
+  return (
+    <div
+      aria-label={`Napredak kviza ${current} od ${safeTotal}`}
+      aria-valuemax={safeTotal}
+      aria-valuemin={0}
+      aria-valuenow={current}
+      className="h-3 overflow-hidden rounded-full border border-[rgba(36,27,47,0.14)] bg-white/72"
+      role="progressbar"
+    >
+      <div
+        className="h-full rounded-full bg-[linear-gradient(90deg,var(--color-gel-pink),var(--color-gel-blue),var(--color-gel-yellow))] transition-[width] duration-300 ease-out"
+        style={{ width: `${percentage}%` }}
+      />
+    </div>
+  );
+}
+
+function QuizPrivacyNote() {
+  return (
+    <RetroCard className="p-4" variant="sticker">
+      <p className="text-sm font-black text-[var(--color-ink)]">
+        Samo javno dopušteni odgovori
+      </p>
+      <p className="mt-2 text-sm leading-6 text-[var(--color-muted)]">
+        Privatna pitanja, owner-only odgovori i upisi bez consent-a za kviz
+        ostaju izvan igre.
+      </p>
+    </RetroCard>
+  );
+}
+
+function SharePreviewText({
+  text,
+  urlLabel,
+}: {
+  text: string;
+  urlLabel: string;
+}) {
+  return (
+    <div className="min-w-0 rounded-[1.1rem] border border-[rgba(36,27,47,0.12)] bg-white/62 p-4">
+      <p className="text-sm font-black text-[var(--color-ink)]">
+        Kako izgleda share
+      </p>
+      <p className="mt-3 whitespace-pre-wrap break-words text-sm leading-6 text-[var(--color-muted)] [overflow-wrap:anywhere]">
+        {text}
+      </p>
+      <p className="mt-3 break-words font-mono text-xs leading-5 text-[var(--color-gel-blue)] [overflow-wrap:anywhere]">
+        {urlLabel}
+      </p>
+    </div>
+  );
+}
+
 function LockedQuizState({
   result,
 }: {
@@ -206,9 +280,30 @@ function LockedQuizState({
               Privatni i “samo za vlasnicu” odgovori ne ulaze u kviz. To je
               namjerno, da igra ostane zabavna bez probijanja povjerenja.
             </p>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="rounded-[1rem] border border-[rgba(36,27,47,0.10)] bg-white/60 p-4">
+                <p className="text-2xl font-black text-[var(--color-ink)]">
+                  {Math.max(lexicon.quizUnlockEntryCount - lexicon.entryCount, 0)}
+                </p>
+                <p className="mt-1 text-sm leading-6 text-[var(--color-muted)]">
+                  upisa do otključavanja
+                </p>
+              </div>
+              <div className="rounded-[1rem] border border-[rgba(36,27,47,0.10)] bg-white/60 p-4">
+                <p className="text-2xl font-black text-[var(--color-ink)]">
+                  {Math.max(
+                    result.requiredEligibleEntryCount - result.eligibleEntryCount,
+                    0,
+                  )}
+                </p>
+                <p className="mt-1 text-sm leading-6 text-[var(--color-muted)]">
+                  quiz-safe osobe do igre
+                </p>
+              </div>
+            </div>
             <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:flex-wrap">
               <ButtonLink href={lexiconInvitePath(lexicon.slug)} variant="secondary">
-                Otvori pozivnicu
+                Pošalji pozivnicu dalje
               </ButtonLink>
               <ButtonLink href={lexiconEntryPath(lexicon.slug)} variant="ghost">
                 Upiši se
@@ -250,9 +345,13 @@ function ReadyQuizState({
   const [selectedChoiceId, setSelectedChoiceId] = useState<string | null>(null);
   const [score, setScore] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
+  const [shareMessage, setShareMessage] = useState("");
   const currentRound = rounds[roundIndex];
   const selectedChoice = currentRound?.choices.find(
     (choice) => choice.id === selectedChoiceId,
+  );
+  const correctChoice = currentRound?.choices.find(
+    (choice) => choice.id === currentRound.correctChoiceId,
   );
   const isLastRound = roundIndex >= rounds.length - 1;
   const progressLabel = `${Math.min(roundIndex + 1, rounds.length)}/${rounds.length} pitanja`;
@@ -284,6 +383,7 @@ function ReadyQuizState({
     setSelectedChoiceId(null);
     setScore(0);
     setIsComplete(false);
+    setShareMessage("");
   }
 
   if (!currentRound) {
@@ -291,27 +391,90 @@ function ReadyQuizState({
   }
 
   if (isComplete) {
+    const quizResult = getQuizResult(score, rounds.length);
+    const quizPath = lexiconQuizPath(lexicon.slug);
+    const origin =
+      configuredSiteUrl ||
+      (typeof window === "undefined" ? "" : window.location.origin);
+    const quizUrl = origin ? createAbsoluteUrl(quizPath, origin) : quizPath;
+    const shareText = createQuizResultShareText({
+      lexiconTitle: lexicon.title,
+      ownerName: lexicon.ownerName,
+      resultTitle: quizResult.title,
+      score,
+      totalRounds: rounds.length,
+      shareLine: quizResult.shareLine,
+    });
+    const whatsAppUrl = createWhatsAppShareUrl(shareText, quizUrl);
+
+    async function handleCopyResult() {
+      setShareMessage("");
+
+      try {
+        const copied = await copyTextToClipboard(`${shareText}\n${quizUrl}`);
+
+        if (!copied) {
+          setShareMessage(
+            "Nisam uspjela automatski kopirati. Označi tekst i kopiraj ručno.",
+          );
+          return;
+        }
+
+        setShareMessage("Rezultat je kopiran!");
+      } catch {
+        setShareMessage(
+          "Nisam uspjela automatski kopirati. Označi tekst i kopiraj ručno.",
+        );
+      }
+    }
+
     return (
       <QuizShell>
         <div className="grid min-w-0 gap-7 overflow-hidden lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-start">
           <div className="min-w-0 space-y-6">
             <NotebookHeader
-              description="Rezultat se ne sprema. Ovo je mali read-only party game sloj za ekipu iz leksikona."
+              description={quizResult.description}
               eyebrow="Kviz završen"
-              sticker="✨"
-              title={`Imaš ${score}/${rounds.length} pogođenih`}
+              sticker={quizResult.sticker}
+              title={quizResult.title}
             />
 
-            <RetroCard className="space-y-5 p-5" variant="sticker" withTape>
-              <ProgressPill label="Rezultat nije spremljen" tone="blue" />
-              <h2 className="break-words text-2xl font-black text-[var(--color-ink)] [overflow-wrap:anywhere]">
-                Sad znaš koliko dobro pamtiš rukopis ekipe.
-              </h2>
-              <p className="break-words text-sm leading-6 text-[var(--color-muted)] [overflow-wrap:anywhere]">
-                Ako želiš isti krug nostalgije sa svojom ekipom, napravi novi
-                leksikon i pošalji link dalje.
-              </p>
+            <RetroCard className="space-y-5 p-5 sm:p-6" variant="sticker" withTape>
+              <div className="flex min-w-0 flex-wrap gap-2">
+                <ProgressPill label={`${score}/${rounds.length} pogođenih`} tone="yellow" />
+                <ProgressPill label="Rezultat nije spremljen" tone="blue" />
+                <ProgressPill label="Bez leaderboarda" tone="neutral" />
+              </div>
+
+              <div className="rounded-[1.25rem] border border-[rgba(36,27,47,0.12)] bg-white/70 p-5">
+                <p className="text-sm font-black uppercase tracking-[0.14em] text-[var(--color-gel-pink)]">
+                  Tvoj rezultat
+                </p>
+                <p className="mt-3 text-5xl font-black leading-none text-[var(--color-ink)]">
+                  {score}/{rounds.length}
+                </p>
+                <p className="mt-3 break-words text-base font-black text-[var(--color-ink)] [overflow-wrap:anywhere]">
+                  {quizResult.shareLine}
+                </p>
+              </div>
+
+              <SharePreviewText text={shareText} urlLabel={quizUrl} />
+
               <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <ButtonLink
+                  className={whatsAppButtonClassName}
+                  href={whatsAppUrl}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  variant="secondary"
+                >
+                  Podijeli rezultat
+                </ButtonLink>
+                <Button onClick={handleCopyResult} type="button" variant="secondary">
+                  {shareMessage === "Rezultat je kopiran!"
+                    ? "Rezultat je kopiran!"
+                    : "Kopiraj rezultat"}
+                </Button>
                 <ButtonLink href={newLexiconPath()} size="lg">
                   Napravi svoj leksikon
                 </ButtonLink>
@@ -322,6 +485,11 @@ function ReadyQuizState({
                   Natrag na pozivnicu
                 </ButtonLink>
               </div>
+              {shareMessage && shareMessage !== "Rezultat je kopiran!" ? (
+                <p className="state-message border-[rgba(190,38,78,0.28)] text-[var(--color-danger)]">
+                  {shareMessage}
+                </p>
+              ) : null}
             </RetroCard>
           </div>
 
@@ -332,6 +500,7 @@ function ReadyQuizState({
               theme={coverTheme.key}
               title={lexicon.title}
             />
+            <QuizPrivacyNote />
           </aside>
         </div>
       </QuizShell>
@@ -352,6 +521,7 @@ function ReadyQuizState({
           <div className="flex min-w-0 flex-wrap gap-2">
             <ProgressPill className="glitter-border" label="Kviz otključan" tone="success" />
             <ProgressPill label={progressLabel} tone="yellow" />
+            <ProgressPill label={`Score ${score}/${roundIndex}`} tone="blue" />
             <ProgressPill
               label={`${result.eligibleEntryCount} quiz-safe osoba`}
               tone="blue"
@@ -359,6 +529,8 @@ function ReadyQuizState({
           </div>
 
           <RetroCard className="space-y-5 p-5 sm:p-6" variant="notebook" withTape>
+            <QuizProgressBar current={roundIndex + 1} total={rounds.length} />
+
             <div className="flex min-w-0 flex-wrap items-center gap-2">
               <Sticker variant="purple">?</Sticker>
               <p className="break-words text-sm font-black uppercase tracking-[0.14em] text-[var(--color-gel-blue)] [overflow-wrap:anywhere]">
@@ -392,6 +564,7 @@ function ReadyQuizState({
                     disabled={selectedChoiceId !== null}
                     key={choice.id}
                     onClick={() => handleSelectChoice(choice.id)}
+                    aria-pressed={isSelected}
                     type="button"
                   >
                     <span className="flex min-w-0 flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
@@ -415,7 +588,10 @@ function ReadyQuizState({
             </div>
 
             {selectedChoiceId ? (
-              <div className="rounded-[1rem] border border-[rgba(36,27,47,0.12)] bg-white/62 p-4">
+              <div
+                className="rounded-[1rem] border border-[rgba(36,27,47,0.12)] bg-white/62 p-4"
+                role="status"
+              >
                 <p className="text-sm font-black text-[var(--color-ink)]">
                   {selectedChoiceId === currentRound.correctChoiceId
                     ? "Pogođeno!"
@@ -424,16 +600,18 @@ function ReadyQuizState({
                 <p className="mt-1 text-sm leading-6 text-[var(--color-muted)]">
                   Odgovor je napisala{" "}
                   <strong className="text-[var(--color-ink)]">
-                    {
-                      currentRound.choices.find(
-                        (choice) => choice.id === currentRound.correctChoiceId,
-                      )?.displayName
-                    }
+                    {correctChoice?.displayName}
                   </strong>
                   {selectedChoice ? `, a ti si odabrala ${selectedChoice.displayName}.` : "."}
                 </p>
               </div>
-            ) : null}
+            ) : (
+              <div className="rounded-[1rem] border border-[rgba(36,27,47,0.10)] bg-white/45 p-4">
+                <p className="text-sm leading-6 text-[var(--color-muted)]">
+                  Odaberi ime. Odgovor se otkriva odmah nakon klika.
+                </p>
+              </div>
+            )}
 
             <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
               <ProgressPill label={`Score ${score}/${rounds.length}`} tone="blue" />
@@ -455,15 +633,7 @@ function ReadyQuizState({
             theme={coverTheme.key}
             title={lexicon.title}
           />
-          <RetroCard className="p-4" variant="sticker">
-            <p className="text-sm font-black text-[var(--color-ink)]">
-              Samo javno dopušteni odgovori
-            </p>
-            <p className="mt-2 text-sm leading-6 text-[var(--color-muted)]">
-              Privatna pitanja, owner-only odgovori i upisi bez consent-a za
-              kviz ostaju izvan igre.
-            </p>
-          </RetroCard>
+          <QuizPrivacyNote />
         </aside>
       </div>
     </QuizShell>

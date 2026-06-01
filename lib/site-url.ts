@@ -1,4 +1,4 @@
-import { LOCAL_SITE_URL } from "@/lib/constants";
+import { LOCAL_SITE_URL } from "./constants.ts";
 
 function normalizeSiteUrl(value: string): string {
   const trimmed = value.trim().replace(/\/+$/g, "");

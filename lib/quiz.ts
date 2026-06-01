@@ -41,6 +41,50 @@ export type QuizRound = {
   correctChoiceId: string;
 };
 
+export type QuizResult = {
+  key: "legend" | "solid" | "warmup";
+  title: string;
+  description: string;
+  sticker: string;
+  shareLine: string;
+};
+
+export function getQuizResult(score: number, totalRounds: number): QuizResult {
+  const safeTotalRounds = Math.max(totalRounds, 1);
+  const ratio = score / safeTotalRounds;
+
+  if (ratio >= 0.8) {
+    return {
+      key: "legend",
+      title: "Razredna legenda",
+      description:
+        "Ti očito pamtiš tko je pisao kojim rukopisom, čak i kad su gel olovke radile protiv svih.",
+      sticker: "⭐",
+      shareLine: "Skoro sve sam pogodila. Ovo traži revanš.",
+    };
+  }
+
+  if (ratio >= 0.45) {
+    return {
+      key: "solid",
+      title: "Detektivka iz zadnje klupe",
+      description:
+        "Imaš osjećaj za ekipu, ali par odgovora te uhvatilo na nostalgiju i krivi trag.",
+      sticker: "💿",
+      shareLine: "Nije loše, ali ekipa me par puta prevarila.",
+    };
+  }
+
+  return {
+    key: "warmup",
+    title: "Nostalgično zagrijavanje",
+    description:
+      "Rezultat kaže da je vrijeme za čitanje starih upisa, poruka iz spomenara i jedan brzi revanš.",
+    sticker: "📼",
+    shareLine: "Pogodila sam manje nego što sam očekivala. Revanš odmah.",
+  };
+}
+
 function hashSeed(seed: string): number {
   let hash = 2166136261;
 

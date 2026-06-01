@@ -1,4 +1,4 @@
-import { QUIZ_UNLOCK_ENTRY_COUNT } from "@/lib/limits";
+import { QUIZ_UNLOCK_ENTRY_COUNT } from "./limits.ts";
 
 export const APP_NAME = "Upiši se";
 export const APP_DOMAIN = "upisi-se.eu";

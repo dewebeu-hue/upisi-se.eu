@@ -59,6 +59,7 @@ Ako ne koristiš dev seed, unesi testne podatke ručno:
 - Nakon 5 aktivnih upisa provjeri da progress kaže da ima dovoljno upisa za kviz.
 - Otvori `/l/[slug]/kviz` i provjeri da prikazuje igru ako postoje barem 3 quiz-safe osobe s dopuštenim odgovorima.
 - Odigraj kviz do kraja i provjeri da se rezultat ne sprema i da postoji CTA `Napravi svoj leksikon`.
+- Na result screenu provjeri da `Podijeli rezultat` otvara WhatsApp share i da `Kopiraj rezultat` kopira samo public-safe tekst i javni quiz link.
 - Obriši upis.
 - Vrati se u admin dashboard i provjeri da upis više nije aktivan.
 - Obriši leksikon.
@@ -93,7 +94,8 @@ Ako ne koristiš dev seed, unesi testne podatke ručno:
 - Kartica `Ti si...`, unlock progress i `Titule ekipe` ne prikazuju admin token, edit/delete token, hash vrijednosti ni privatne linkove.
 - Kviz ne prikazuje privatna pitanja, owner-only odgovore, secret odgovore, `entryId`, tokene ni hash vrijednosti.
 - Rezultat kviza se ne sprema u bazu i ne postoji leaderboard.
-- `/sitemap.xml` ne uključuje `/admin/`, `/e/`, `/l/[slug]`, `/l/[slug]/upis`, `/l/[slug]/hvala` ni `/api/`.
+- Share tekst rezultata ne sadrži privatne odgovore, konkretne odgovore iz kviza, tokene, hash vrijednosti ni privatne linkove.
+- `/sitemap.xml` ne uključuje `/admin/`, `/e/`, `/l/[slug]`, `/l/[slug]/upis`, `/l/[slug]/hvala`, `/l/[slug]/kviz` ni `/api/`.
 - Privatne i flow rute imaju `noindex`.
 - Nema Google Analyticsa, Meta Pixela, tracking skripti, Stripea, autha ni uploadanja slika.
 

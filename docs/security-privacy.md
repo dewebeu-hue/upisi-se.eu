@@ -182,6 +182,14 @@ Kviz ne smije vraćati `entryId`, `adminToken`, `adminTokenHash`, `deleteTokenHa
 
 U Fazi 2 rezultat se ne sprema u bazu, ne postoji leaderboard, ne šalju se eventovi i ne uvodi se analytics. Ako kasnije uvedemo spremanje rezultata, treba zasebno definirati privacy pravila, retention i korisnički consent.
 
+## Gamification Faza 3: shareable quiz rezultat
+
+Faza 3 smije prikazati zabavnu titulu rezultata i omogućiti kopiranje ili WhatsApp/Viber share rezultata. Share tekst smije sadržavati samo naziv leksikona, ime vlasnice, javni quiz link, broj pogođenih odgovora i generičku titulu rezultata.
+
+Share rezultat ne smije sadržavati privatne odgovore, konkretne odgovore iz kviza, `entryId`, admin link, edit/delete link, token query parametre, hash vrijednosti, pepper, IP adresu, user-agent ni druge interne podatke.
+
+Rezultat se i dalje ne sprema u Convex, ne šalje se u analytics i ne postoji leaderboard. Titula rezultata računa se lokalno iz `score/totalRounds` i nije identitet ili profil korisnice.
+
 ## MVP privacy checklist
 
 - Nema Google Analyticsa, Meta Pixela ni vanjskog trackinga.
@@ -191,6 +199,6 @@ U Fazi 2 rezultat se ne sprema u bazu, ne postoji leaderboard, ne šalju se even
 - Privatni tokeni se ne spremaju u `localStorage` ili session storage.
 - `adminTokenHash` i `deleteTokenHash` ne prikazuju se u UI-ju.
 - Javni share link ne sadrži `token` query param.
-- `/admin/[lexiconId]`, `/e/[entryId]`, `/l/[slug]/upis` i `/l/[slug]/hvala` imaju `noindex`.
+- `/admin/[lexiconId]`, `/e/[entryId]`, `/l/[slug]/upis`, `/l/[slug]/hvala` i `/l/[slug]/kviz` imaju `noindex`.
 - Sitemap ne uključuje privatne rute, flow rute, pojedinačne leksikone ni API rute.
 - OG metadata i OG slike ne prikazuju privatne odgovore, hash vrijednosti ni privatne linkove.

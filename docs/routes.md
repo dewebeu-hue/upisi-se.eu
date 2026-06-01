@@ -102,7 +102,7 @@ Kviz ne prikazuje `entryId`, `adminToken`, `adminTokenHash`, `deleteTokenHash`, 
 
 Ako leksikon nije otključan ili nema dovoljno quiz-safe odgovora, stranica prikazuje locked/not-enough state s CTA-om na javnu pozivnicu. Ako slug ne postoji, prikazuje siguran not-found state.
 
-Rezultat se u ovoj fazi ne sprema u bazu, nema leaderboarda, nema analyticsa i nema dodatnog event trackinga.
+Rezultat se u ovoj fazi ne sprema u bazu, nema leaderboarda, nema analyticsa i nema dodatnog event trackinga. Result screen smije generirati zabavnu titulu i share copy za WhatsApp/Viber, ali share tekst smije sadržavati samo javni quiz link, rezultat i public-safe naziv leksikona.
 
 Ruta ima `noindex` i ne ulazi u sitemap.
 
@@ -137,7 +137,7 @@ Ruta je disallowana u `robots.txt` i dodatno ima `noindex, nofollow`.
 - Dinamična share slika za javnu pozivnicu generira se kroz `/api/og/lexicon/[slug]`.
 - OG rute su isključene iz robots crawlanja preko `/api/`, ali se mogu direktno dohvatiti kada ih metadata referencira.
 - OG slike koriste samo tekst, emoji i CSS. Nema vanjskih slika, Google fontova ni privatnih podataka.
-- `/admin/[lexiconId]`, `/e/[entryId]`, `/l/[slug]/upis` i `/l/[slug]/hvala` ne ulaze u sitemap.
+- `/admin/[lexiconId]`, `/e/[entryId]`, `/l/[slug]/upis`, `/l/[slug]/hvala` i `/l/[slug]/kviz` ne ulaze u sitemap.
 
 ## Primjeri
 

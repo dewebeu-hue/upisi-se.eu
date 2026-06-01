@@ -56,8 +56,10 @@ import {
   buildQuizRounds,
   countEligibleQuizEntries,
   getEligibleQuizCandidates,
+  getQuizResult,
   type QuizEntryInput,
 } from "../lib/quiz.ts";
+import { createQuizResultShareText } from "../lib/share.ts";
 import {
   ACTIVE_STATUS,
   DELETED_STATUS,
@@ -443,6 +445,24 @@ test("quiz rounds require at least three eligible entries and hide entry ids in 
   assert.ok(
     firstRound.choices.some((choice) => choice.id === firstRound.correctChoiceId),
   );
+});
+
+test("quiz result titles are score-based and share copy stays public-safe", () => {
+  const result = getQuizResult(4, 5);
+  const shareText = createQuizResultShareText({
+    lexiconTitle: "Anin leksikon",
+    ownerName: "Ana",
+    resultTitle: result.title,
+    score: 4,
+    totalRounds: 5,
+    shareLine: result.shareLine,
+  });
+
+  assert.equal(result.key, "legend");
+  assert.equal(getQuizResult(2, 5).key, "warmup");
+  assert.match(shareText, /4\/5/);
+  assert.match(shareText, /Anin leksikon/);
+  assert.doesNotMatch(shareText, /token|adminToken|deleteTokenHash|adminTokenHash/i);
 });
 
 test("public error messages hide unknown internals but keep validation copy", () => {
