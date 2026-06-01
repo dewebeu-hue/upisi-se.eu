@@ -16,17 +16,17 @@ export function EmptyState({
   sticker = "✨",
 }: EmptyStateProps) {
   return (
-    <RetroCard className="p-5 text-center sm:p-7" variant="notebook" withTape>
+    <RetroCard className="p-4 text-center sm:p-7" variant="notebook" withTape>
       <Sticker className="mx-auto" variant="yellow">
         {sticker}
       </Sticker>
-      <h2 className="mt-5 text-2xl font-black text-[var(--color-ink)]">
+      <h2 className="mt-5 break-words text-2xl font-black text-[var(--color-ink)] [overflow-wrap:anywhere]">
         {title}
       </h2>
-      <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-[var(--color-muted)] sm:text-base">
+      <p className="mx-auto mt-3 max-w-md break-words text-sm leading-6 text-[var(--color-muted)] [overflow-wrap:anywhere] sm:text-base">
         {description}
       </p>
-      {action ? <div className="mt-6">{action}</div> : null}
+      {action ? <div className="mt-6 flex justify-center">{action}</div> : null}
     </RetroCard>
   );
 }

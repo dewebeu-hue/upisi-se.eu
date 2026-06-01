@@ -34,7 +34,7 @@ export function Sticker({
   return (
     <span
       className={cn(
-        "inline-flex items-center justify-center rounded-[0.9rem] border border-white/60 font-black leading-none shadow-[0_8px_20px_rgba(36,27,47,0.10)]",
+        "inline-flex max-w-full items-center justify-center rounded-[0.9rem] border border-white/60 text-center font-black leading-tight whitespace-normal break-words shadow-[0_8px_20px_rgba(36,27,47,0.10)] [overflow-wrap:anywhere]",
         variantClasses[variant],
         sizeClasses[size],
         className,

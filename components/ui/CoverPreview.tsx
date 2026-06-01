@@ -56,7 +56,7 @@ export function CoverPreview({
           <h3 className="mt-3 max-w-full break-words text-3xl font-black leading-tight text-[var(--color-ink)] [overflow-wrap:anywhere] sm:text-4xl">
             {title}
           </h3>
-          <p className="cover-preview__owner mt-5 inline-flex max-w-full rounded-full px-3 py-1 text-sm font-bold leading-snug whitespace-normal break-words [overflow-wrap:anywhere]">
+          <p className="cover-preview__owner mt-5 inline-block max-w-full rounded-full px-3 py-1 text-sm font-bold leading-snug break-words [overflow-wrap:anywhere]">
             vlasnica: {ownerName}
           </p>
         </div>

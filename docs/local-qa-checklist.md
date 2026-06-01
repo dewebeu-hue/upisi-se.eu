@@ -98,6 +98,8 @@ Ako ne koristiš dev seed, unesi testne podatke ručno:
 - Mobile landing nema horizontalni scroll.
 - Mobile `/novi` ima pune širine inpute i jasan primarni CTA.
 - Mobile invite jasno razlikuje `Upiši se` od `Napravi svoj leksikon`.
+- Mobile invite na `/l/[slug]` i `/demo/pozivnica` nema horizontalni scroll na 360, 390, 412 i 430 px.
+- Mobile invite badgeovi, share preview URL i CoverPreview naslov ostaju unutar kartica i uredno se prelamaju.
 - Mobile entry form ima čitljive label-e, checkboxe i error poruke.
 - Mobile thank-you ne prikazuje privatni edit/delete link.
 - Mobile admin kartice i dugi odgovori se prelamaju.
