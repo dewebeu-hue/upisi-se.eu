@@ -138,6 +138,24 @@ function QueryErrorState() {
   );
 }
 
+function DeletedEntryState({ invitePath }: { invitePath: string }) {
+  return (
+    <EntryShell>
+      <EmptyState
+        action={<ButtonLink href={invitePath}>Otvori pozivnicu</ButtonLink>}
+        description="Tvoj upis više nije aktivan u ovom leksikonu."
+        sticker="✨"
+        title="Upis je obrisan"
+      />
+      <div className="mt-5 text-center">
+        <ButtonLink href={newLexiconPath()} variant="ghost">
+          Napravi svoj leksikon
+        </ButtonLink>
+      </div>
+    </EntryShell>
+  );
+}
+
 function LoadingState() {
   return (
     <EntryShell>
@@ -168,6 +186,9 @@ export function EditEntryForm({ entryId, token }: EditEntryFormProps) {
 
 function EditEntryFormWithConvex({ entryId, token }: EditEntryFormProps) {
   const normalizedToken = token?.trim();
+  const [deletedInvitePath, setDeletedInvitePath] = useState<string | null>(
+    null,
+  );
   const shouldQuery = Boolean(normalizedToken && entryId.trim());
   const entryData = useQuery(
     api.entries.getEntryForEdit,
@@ -178,6 +199,10 @@ function EditEntryFormWithConvex({ entryId, token }: EditEntryFormProps) {
         }
       : "skip",
   );
+
+  if (deletedInvitePath) {
+    return <DeletedEntryState invitePath={deletedInvitePath} />;
+  }
 
   if (!normalizedToken || !entryId.trim()) {
     return <InvalidPrivateLinkState />;
@@ -195,6 +220,7 @@ function EditEntryFormWithConvex({ entryId, token }: EditEntryFormProps) {
     <LoadedEditEntryForm
       entry={entryData}
       entryId={entryId}
+      onDeleted={setDeletedInvitePath}
       token={normalizedToken}
     />
   );
@@ -239,10 +265,12 @@ function buildMoodOptions(currentMood: string | undefined): string[] {
 function LoadedEditEntryForm({
   entry,
   entryId,
+  onDeleted,
   token,
 }: {
   entry: EditableEntry;
   entryId: string;
+  onDeleted: (invitePath: string) => void;
   token: string;
 }) {
   const updateEntry = useMutation(api.entries.updateEntry);
@@ -263,29 +291,10 @@ function LoadedEditEntryForm({
   const [isSaving, setIsSaving] = useState(false);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isDeleted, setIsDeleted] = useState(false);
   const dynamicMoodOptions = useMemo(
     () => buildMoodOptions(entry.mood),
     [entry.mood],
   );
-
-  if (isDeleted) {
-    return (
-      <EntryShell>
-        <EmptyState
-          action={<ButtonLink href={invitePath}>Otvori pozivnicu</ButtonLink>}
-          description="Tvoj upis više nije aktivan u ovom leksikonu."
-          sticker="✨"
-          title="Upis je obrisan"
-        />
-        <div className="mt-5 text-center">
-          <ButtonLink href={newLexiconPath()} variant="ghost">
-            Napravi svoj leksikon
-          </ButtonLink>
-        </div>
-      </EntryShell>
-    );
-  }
 
   function validateForm() {
     const nextErrors: FieldErrors = {};
@@ -411,7 +420,7 @@ function LoadedEditEntryForm({
         return;
       }
 
-      setIsDeleted(true);
+      onDeleted(invitePath);
     } catch {
       setErrors({
         form: "Nešto je pošlo po zlu pri brisanju upisa. Pokušaj ponovno.",
