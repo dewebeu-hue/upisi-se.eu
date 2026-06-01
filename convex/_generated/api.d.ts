@@ -12,6 +12,7 @@ import type * as authLinks from "../authLinks.js";
 import type * as entries from "../entries.js";
 import type * as lexicons from "../lexicons.js";
 import type * as migrations from "../migrations.js";
+import type * as quiz from "../quiz.js";
 import type * as shared from "../shared.js";
 
 import type {
@@ -25,6 +26,7 @@ declare const fullApi: ApiFromModules<{
   entries: typeof entries;
   lexicons: typeof lexicons;
   migrations: typeof migrations;
+  quiz: typeof quiz;
   shared: typeof shared;
 }>;
 

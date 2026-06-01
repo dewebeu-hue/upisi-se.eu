@@ -172,6 +172,16 @@ Rezultat nakon upisa računa se iz sigurnog seeda vezanog uz sam upis i UI odabi
 
 Share copy u gamified flowu smije sadržavati samo javni invite link. Ne smije sadržavati admin link, edit/delete link, token query parametre, hash vrijednosti ni sadržaj privatnih odgovora.
 
+## Gamification Faza 2: read-only kviz
+
+Kviz `Pogodi čiji je odgovor?` smije koristiti samo aktivne upise koji imaju `consentQuizUse: true`. U runde smiju ući samo odgovori s `visibility: "quizEligible"` i `isPrivate: false`.
+
+Privatna pitanja, `ownerOnly` odgovori, optional secret odgovori i upisi bez consent-a za kviz ne smiju ući u kviz ni kao pitanje ni kao odgovor.
+
+Kviz ne smije vraćati `entryId`, `adminToken`, `adminTokenHash`, `deleteTokenHash`, plaintext tokene, pepper ni privatne linkove. Izbori u kvizu prikazuju samo javno prikazivo ime/nadimak.
+
+U Fazi 2 rezultat se ne sprema u bazu, ne postoji leaderboard, ne šalju se eventovi i ne uvodi se analytics. Ako kasnije uvedemo spremanje rezultata, treba zasebno definirati privacy pravila, retention i korisnički consent.
+
 ## MVP privacy checklist
 
 - Nema Google Analyticsa, Meta Pixela ni vanjskog trackinga.

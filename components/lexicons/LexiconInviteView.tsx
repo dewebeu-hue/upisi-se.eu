@@ -20,6 +20,7 @@ import {
   demoInvitePath,
   lexiconEntryPath,
   lexiconInvitePath,
+  lexiconQuizPath,
   newLexiconPath,
 } from "@/lib/routes";
 
@@ -67,6 +68,7 @@ export function LexiconInviteView({
     [invitePath, origin],
   );
   const entryPath = lexiconEntryPath(lexicon.slug);
+  const quizPath = lexiconQuizPath(lexicon.slug);
   const entryCountLabel = lexicon.quizUnlocked
     ? "Dovoljno upisa za kviz"
     : `${lexicon.entryCount}/${lexicon.quizUnlockEntryCount} upisa do kviza`;
@@ -157,6 +159,15 @@ export function LexiconInviteView({
               >
                 Napravi svoj leksikon
               </ButtonLink>
+              {!isDemo && lexicon.quizUnlocked ? (
+                <ButtonLink
+                  className="w-full sm:w-auto"
+                  href={quizPath}
+                  variant="secondary"
+                >
+                  Igraj kviz
+                </ButtonLink>
+              ) : null}
             </div>
           </div>
 

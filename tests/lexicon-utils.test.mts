@@ -6,7 +6,7 @@ import {
   validateCreateLexiconInput,
 } from "../lib/lexicon-utils.ts";
 import { validateEntryInput } from "../lib/entry-utils.ts";
-import { adminPath, editEntryPath } from "../lib/routes.ts";
+import { adminPath, editEntryPath, lexiconQuizPath } from "../lib/routes.ts";
 import { createSecretToken, hashToken } from "../lib/token.ts";
 import {
   appendSlugSuffix,
@@ -51,6 +51,13 @@ import {
   getTeamSuperlatives,
   getUnlockMilestones,
 } from "../lib/gamification.ts";
+import {
+  QUIZ_MIN_ELIGIBLE_ENTRIES,
+  buildQuizRounds,
+  countEligibleQuizEntries,
+  getEligibleQuizCandidates,
+  type QuizEntryInput,
+} from "../lib/quiz.ts";
 import {
   ACTIVE_STATUS,
   DELETED_STATUS,
@@ -179,6 +186,10 @@ test("private route helpers safely encode token query params", () => {
   assert.equal(
     editEntryPath("entry/1", "edit token"),
     "/e/entry%2F1?token=edit+token",
+  );
+  assert.equal(
+    lexiconQuizPath("testni leksikon"),
+    "/l/testni%20leksikon/kviz",
   );
 });
 
@@ -348,6 +359,92 @@ test("team superlatives stay locked until enough entries and are deterministic",
   assert.equal(getTeamSuperlatives(enoughEntries)[0]?.displayName, "Maja");
 });
 
+test("quiz candidates include only consented public quiz answers", () => {
+  const entries: QuizEntryInput[] = [
+    {
+      entryId: "entry-1",
+      displayName: "Maja",
+      consentQuizUse: true,
+      createdAt: 1,
+      answers: [
+        {
+          questionId: "song",
+          question: "Koja pjesma te vraća u te dane?",
+          answer: "Toxic",
+          visibility: "quizEligible",
+          isPrivate: false,
+        },
+        {
+          questionId: "secret",
+          question: "Inicijali simpatije?",
+          answer: "M. M.",
+          visibility: "ownerOnly",
+          isPrivate: true,
+        },
+      ],
+    },
+    {
+      entryId: "entry-2",
+      displayName: "Ana",
+      consentQuizUse: false,
+      createdAt: 2,
+      answers: [
+        {
+          questionId: "song",
+          question: "Koja pjesma te vraća u te dane?",
+          answer: "Whenever, Wherever",
+          visibility: "quizEligible",
+          isPrivate: false,
+        },
+      ],
+    },
+  ];
+  const candidates = getEligibleQuizCandidates(entries);
+
+  assert.equal(candidates.length, 1);
+  assert.equal(candidates[0]?.displayName, "Maja");
+  assert.equal(candidates[0]?.answer, "Toxic");
+  assert.equal(countEligibleQuizEntries(candidates), 1);
+});
+
+test("quiz rounds require at least three eligible entries and hide entry ids in choices", () => {
+  const entries: QuizEntryInput[] = ["Maja", "Ana", "Ivana"].map(
+    (displayName, index) => ({
+      entryId: `entry-${index + 1}`,
+      displayName,
+      consentQuizUse: true,
+      createdAt: index + 1,
+      answers: [
+        {
+          questionId: "song",
+          question: "Koja pjesma te vraća u te dane?",
+          answer: `${displayName} odgovor`,
+          visibility: "quizEligible",
+          isPrivate: false,
+        },
+      ],
+    }),
+  );
+  const twoEntryCandidates = getEligibleQuizCandidates(entries.slice(0, 2));
+  const candidates = getEligibleQuizCandidates(entries);
+  const firstRounds = buildQuizRounds(candidates, "testni-leksikon");
+  const secondRounds = buildQuizRounds(candidates, "testni-leksikon");
+  const firstRound = firstRounds[0];
+
+  assert.equal(QUIZ_MIN_ELIGIBLE_ENTRIES, 3);
+  assert.deepEqual(buildQuizRounds(twoEntryCandidates, "testni-leksikon"), []);
+  assert.deepEqual(firstRounds, secondRounds);
+  assert.ok(firstRound);
+  assert.equal(firstRound.choices.length, 3);
+  assert.equal(
+    firstRound.choices.some((choice) => "entryId" in choice),
+    false,
+  );
+  assert.ok(
+    firstRound.choices.some((choice) => choice.id === firstRound.correctChoiceId),
+  );
+});
+
 test("public error messages hide unknown internals but keep validation copy", () => {
   const validationError = new AppValidationError(
     "display_name_required",
@@ -425,5 +522,20 @@ test("convex entry functions expose the MVP API surface without leaking token ha
   assert.match(authSource, /TOKEN_PEPPER/);
   assert.match(source, /deleteTokenHash/);
   assert.doesNotMatch(source, /deleteTokenHash:\s*entry\.deleteTokenHash/);
+  assert.doesNotMatch(source, /console\.(log|warn|error)/);
+});
+
+test("convex quiz function is read-only and filters private answer data", () => {
+  const source = readFileSync("convex/quiz.ts", "utf8");
+  const helperSource = readFileSync("lib/quiz.ts", "utf8");
+
+  assert.match(source, /export const getQuizBySlug = query/);
+  assert.match(source, /getEligibleQuizCandidates/);
+  assert.match(helperSource, /consentQuizUse/);
+  assert.match(helperSource, /isPrivate/);
+  assert.doesNotMatch(source, /mutation\(/);
+  assert.doesNotMatch(source, /ctx\.db\.(insert|patch|delete)/);
+  assert.doesNotMatch(source, /adminTokenHash/);
+  assert.doesNotMatch(source, /deleteTokenHash/);
   assert.doesNotMatch(source, /console\.(log|warn|error)/);
 });

@@ -56,7 +56,9 @@ Ako ne koristiš dev seed, unesi testne podatke ručno:
 - Promijeni jedan odgovor i spremi.
 - Vrati se u admin dashboard i provjeri da je izmjena vidljiva.
 - Nakon najmanje 3 aktivna upisa provjeri da admin prikazuje `Titule ekipe`.
-- Nakon 5 aktivnih upisa provjeri da progress kaže da ima dovoljno upisa za budući kviz, ali da se stvarni kviz još ne otvara.
+- Nakon 5 aktivnih upisa provjeri da progress kaže da ima dovoljno upisa za kviz.
+- Otvori `/l/[slug]/kviz` i provjeri da prikazuje igru ako postoje barem 3 quiz-safe osobe s dopuštenim odgovorima.
+- Odigraj kviz do kraja i provjeri da se rezultat ne sprema i da postoji CTA `Napravi svoj leksikon`.
 - Obriši upis.
 - Vrati se u admin dashboard i provjeri da upis više nije aktivan.
 - Obriši leksikon.
@@ -70,6 +72,8 @@ Ako ne koristiš dev seed, unesi testne podatke ručno:
 - Otvori `/e/[id]?token=wrong`.
 - Otvori `/l/nepostojeci-slug`.
 - Provjeri da `/l/nepostojeci-slug` prikazuje `Leksikon nije pronađen`, a ne production crash.
+- Otvori `/l/nepostojeci-slug/kviz` i provjeri da prikazuje siguran `Kviz nije dostupan` state.
+- Otvori `/l/[slug]/kviz` prije otključavanja i provjeri locked/not-enough state umjesto praznog ili rušenog ekrana.
 - Pokušaj submitati `/novi` bez required polja.
 - Pokušaj submitati `/l/[slug]/upis` bez required polja.
 - Otvori dodatna pitanja i ostavi ih praznima; provjeri da prazni optional odgovori ne stvaraju validation error.
@@ -87,6 +91,8 @@ Ako ne koristiš dev seed, unesi testne podatke ručno:
 - Javni share link ne sadrži `token`.
 - Admin dashboard kopira samo javni invite link.
 - Kartica `Ti si...`, unlock progress i `Titule ekipe` ne prikazuju admin token, edit/delete token, hash vrijednosti ni privatne linkove.
+- Kviz ne prikazuje privatna pitanja, owner-only odgovore, secret odgovore, `entryId`, tokene ni hash vrijednosti.
+- Rezultat kviza se ne sprema u bazu i ne postoji leaderboard.
 - `/sitemap.xml` ne uključuje `/admin/`, `/e/`, `/l/[slug]`, `/l/[slug]/upis`, `/l/[slug]/hvala` ni `/api/`.
 - Privatne i flow rute imaju `noindex`.
 - Nema Google Analyticsa, Meta Pixela, tracking skripti, Stripea, autha ni uploadanja slika.
@@ -102,6 +108,7 @@ Ako ne koristiš dev seed, unesi testne podatke ručno:
 - Mobile invite badgeovi, share preview URL i CoverPreview naslov ostaju unutar kartica i uredno se prelamaju.
 - Mobile entry form ima čitljive label-e, checkboxe i error poruke.
 - Mobile thank-you ne prikazuje privatni edit/delete link.
+- Mobile kviz nema horizontalni scroll, izbori imaju jasna selected/correct/incorrect stanja i primarni CTA ostaje vidljiv.
 - Mobile admin kartice i dugi odgovori se prelamaju.
 - Mobile edit/delete forma jasno odvaja spremanje od opasne zone.
 - Focus states su vidljivi na linkovima, inputima, checkboxima i gumbima.

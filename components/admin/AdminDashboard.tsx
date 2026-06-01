@@ -20,7 +20,7 @@ import { Sticker } from "@/components/ui/Sticker";
 import { copyTextToClipboard } from "@/lib/clipboard";
 import { formatShortDateTime } from "@/lib/date";
 import { getCoverThemeByValues } from "@/lib/design";
-import { lexiconInvitePath, newLexiconPath } from "@/lib/routes";
+import { lexiconInvitePath, lexiconQuizPath, newLexiconPath } from "@/lib/routes";
 import { createAbsoluteUrl } from "@/lib/share";
 
 type AdminDashboardProps = {
@@ -172,6 +172,9 @@ function AdminDashboardWithConvex({ lexiconId, token }: AdminDashboardProps) {
   const invitePath = dashboard?.lexicon.slug
     ? lexiconInvitePath(dashboard.lexicon.slug)
     : fallbackInvitePath;
+  const quizPath = dashboard?.lexicon.slug
+    ? lexiconQuizPath(dashboard.lexicon.slug)
+    : "";
   const origin =
     configuredSiteUrl ||
     (typeof window === "undefined" ? "" : window.location.origin);
@@ -349,6 +352,11 @@ function AdminDashboardWithConvex({ lexiconId, token }: AdminDashboardProps) {
               <ButtonLink href={invitePath} variant="ghost">
                 Otvori pozivnicu
               </ButtonLink>
+              {lexicon.quizUnlocked ? (
+                <ButtonLink href={quizPath} variant="secondary">
+                  Otvori kviz
+                </ButtonLink>
+              ) : null}
             </div>
             {copyMessage && copyMessage !== "Javni link je kopiran." ? (
               <p className="state-message border-[rgba(190,38,78,0.28)] text-[var(--color-danger)]">

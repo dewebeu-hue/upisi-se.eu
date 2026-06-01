@@ -35,6 +35,10 @@ export function lexiconThanksPath(slug: string): string {
   return `/l/${encodePathSegment(slug)}/hvala`;
 }
 
+export function lexiconQuizPath(slug: string): string {
+  return `/l/${encodePathSegment(slug)}/kviz`;
+}
+
 export function adminPath(lexiconId: string, token?: string): string {
   return withToken(`/admin/${encodePathSegment(lexiconId)}`, token);
 }

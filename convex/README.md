@@ -61,9 +61,13 @@ Detaljan runbook je u `docs/production-setup.md`.
 - `updateEntry`: uređuje upis preko edit/delete tokena.
 - `softDeleteEntry`: radi soft delete upisa i sinkronizira `entryCount`.
 
-UI još nije namjerno spojen na ove nove funkcije u ovom koraku. Spajanje `/novi`, javne pozivnice, upis forme i admin dashboarda dolazi u sljedećim promptovima.
+`convex/quiz.ts` sadrži read-only Faza 2 funkciju za kviz:
 
-Kviz logika i generiranje quiz rundi dolaze kasnije.
+- `getQuizBySlug`: vraća locked/not-found/not-enough/ready state za javni kviz i sastavlja runde samo iz aktivnih upisa s `consentQuizUse: true`, `visibility: "quizEligible"` i `isPrivate: false`.
+
+Kviz u ovoj fazi ne sprema rezultate, ne generira trajne `quizRounds` dokumente i ne vraća privatne odgovore, entry ID-jeve, tokene ni hash vrijednosti.
+
+UI je spojen na leksikon, upis, admin i read-only kviz flow. Sljedeći veći backend koraci mogu dodati trajne quiz runde ili score model tek nakon zasebne privacy odluke.
 
 Stranica `/novi` sada koristi `createLexicon` za stvarno kreiranje leksikona. Nakon uspješnog kreiranja frontend prikazuje javni invite link i privatni admin link.
 

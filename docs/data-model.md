@@ -101,7 +101,7 @@ Privatnosna napomena: `optionalSecret` pitanja, poput inicijala simpatije, moraj
 
 ### quizRounds
 
-Budući model za “Pogodi čiji je odgovor?” kviz. U ovom koraku se samo definira model; generiranje rundi dolazi kasnije.
+Budući trajni model za “Pogodi čiji je odgovor?” kviz. Faza 2 trenutno ne piše u ovu tablicu; read-only query `quiz:getQuizBySlug` privremeno gradi runde iz aktivnih upisa koji imaju quiz consent i javno dopuštene odgovore.
 
 Ključna polja:
 - `lexiconId`: leksikon kojem runda pripada.
@@ -115,7 +115,7 @@ Indeksi:
 - `by_lexiconId_status_createdAt`: aktivne runde za leksikon u vremenskom redoslijedu.
 - `by_entryId`: dohvat rundi vezanih uz jedan upis.
 
-Privatnosna napomena: u quiz runde ne smiju ulaziti privatni odgovori ni odgovori bez `consentQuizUse`.
+Privatnosna napomena: u quiz runde ne smiju ulaziti privatni odgovori, owner-only odgovori, optional secret odgovori ni odgovori bez `consentQuizUse`.
 
 ### events
 

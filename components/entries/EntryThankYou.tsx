@@ -16,7 +16,7 @@ import { SharePreviewCard } from "@/components/ui/SharePreviewCard";
 import { SparkleBurst } from "@/components/ui/SparkleBurst";
 import { copyTextToClipboard } from "@/lib/clipboard";
 import { getCoverThemeByValues } from "@/lib/design";
-import { lexiconInvitePath, newLexiconPath } from "@/lib/routes";
+import { lexiconInvitePath, lexiconQuizPath, newLexiconPath } from "@/lib/routes";
 import {
   createAbsoluteUrl,
   createAfterEntryShareText,
@@ -73,6 +73,7 @@ function EntryThankYouInner({ slug }: EntryThankYouProps) {
   const publicInvitePath = lexicon?.slug
     ? lexiconInvitePath(lexicon.slug)
     : fallbackInvitePath;
+  const quizPath = lexicon?.slug ? lexiconQuizPath(lexicon.slug) : "";
   const publicInviteUrl = useMemo(
     () =>
       origin ? createAbsoluteUrl(publicInvitePath, origin) : publicInvitePath,
@@ -188,6 +189,11 @@ function EntryThankYouInner({ slug }: EntryThankYouProps) {
               <ButtonLink href={newLexiconPath()} size="lg">
                 Napravi svoj leksikon
               </ButtonLink>
+              {lexicon.quizUnlocked ? (
+                <ButtonLink href={quizPath} variant="secondary">
+                  Igraj kviz
+                </ButtonLink>
+              ) : null}
               <Button onClick={handleCopyInviteLink} type="button" variant="secondary">
                 {copyMessage === "Javni link je kopiran!"
                   ? "Javni link je kopiran!"
@@ -230,6 +236,13 @@ function EntryThankYouInner({ slug }: EntryThankYouProps) {
                 label={progressLabel}
                 tone={lexicon.quizUnlocked ? "success" : "yellow"}
               />
+              {lexicon.quizUnlocked ? (
+                <div className="mt-4">
+                  <ButtonLink href={quizPath} variant="secondary">
+                    Otvori kviz
+                  </ButtonLink>
+                </div>
+              ) : null}
             </div>
 
             <SharePreviewCard

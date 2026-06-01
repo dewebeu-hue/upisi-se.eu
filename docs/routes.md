@@ -11,6 +11,7 @@ Ovo je plan javnih i privatnih ruta za lokalni MVP.
 | `/l/[slug]` | Javna pozivnica leksikona | Convex query + prazno/loading/error stanje |
 | `/l/[slug]/upis` | Forma za upis prijateljice | Prva forma + Convex mutation |
 | `/l/[slug]/hvala` | Thank-you stranica nakon upisa | Javni viralni CTA bez privatnih tokena |
+| `/l/[slug]/kviz` | Read-only kviz `Pogodi čiji je odgovor?` | Convex query, bez spremanja rezultata |
 | `/demo/pozivnica` | Statički primjer javne pozivnice | Demo bez Convex queryja |
 | `/admin/[lexiconId]` | Privatni admin pregled | Convex query, zahtijeva `token` query param |
 | `/e/[entryId]` | Edit/delete upisa | Convex query/mutations, zahtijeva `token` query param |
@@ -28,7 +29,7 @@ Ovo je plan javnih i privatnih ruta za lokalni MVP.
 - Apsolutni URL-ovi za metadata/share sloj grade se preko `NEXT_PUBLIC_SITE_URL`, uz lokalni fallback `http://localhost:3000`.
 - Sitemap smije sadržavati samo stabilne javne stranice: `/`, `/novi`, `/privacy` i `/terms`.
 - Robots pravila ne smiju blokirati `/l/` jer chat i crawler previewi trebaju dohvatiti metadata i OG sliku, ali pojedinačne invite stranice ostaju `noindex`.
-- Admin, edit/delete, submit i thank-you rute moraju imati `noindex`.
+- Admin, edit/delete, submit, thank-you i quiz rute moraju imati `noindex`.
 
 ## `/l/[slug]` javna pozivnica
 
@@ -87,9 +88,23 @@ Stranica ne čita `entryId`, `token`, admin token ni edit/delete token iz query 
 
 Primarna akcija vodi na `/novi` kako bi osoba mogla napraviti svoj leksikon. Sekundarne akcije smiju kopirati ili dijeliti samo javni invite link `/l/[slug]`.
 
-Stranica prikazuje viralni CTA i unlock progress prema budućem formatu `Pogodi čiji je odgovor?`, ali ne otvara stvarni kviz dok kviz logika ne postoji.
+Stranica prikazuje viralni CTA i unlock progress prema formatu `Pogodi čiji je odgovor?`. Kad je kviz otključan, smije ponuditi link na read-only kviz `/l/[slug]/kviz`.
 
 Ruta je `noindex` jer je post-submit state i ne treba ulaziti u sitemap ni rezultate tražilice.
+
+## `/l/[slug]/kviz` read-only kviz
+
+Ruta `/l/[slug]/kviz` je javna read-only igra `Pogodi čiji je odgovor?` za leksikone koji su otključali kviz.
+
+Stranica dohvaća podatke preko `quiz:getQuizBySlug`. Query vraća samo public-safe podatke leksikona i quiz runde sastavljene iz aktivnih upisa koji imaju `consentQuizUse: true`, `visibility: "quizEligible"` i `isPrivate: false`.
+
+Kviz ne prikazuje `entryId`, `adminToken`, `adminTokenHash`, `deleteTokenHash`, privatne odgovore, owner-only odgovore ni secret pitanja. Izbori u rundi prikazuju samo imena/nadimke.
+
+Ako leksikon nije otključan ili nema dovoljno quiz-safe odgovora, stranica prikazuje locked/not-enough state s CTA-om na javnu pozivnicu. Ako slug ne postoji, prikazuje siguran not-found state.
+
+Rezultat se u ovoj fazi ne sprema u bazu, nema leaderboarda, nema analyticsa i nema dodatnog event trackinga.
+
+Ruta ima `noindex` i ne ulazi u sitemap.
 
 ## `/admin/[lexiconId]` privatni admin pregled
 
@@ -129,6 +144,7 @@ Ruta je disallowana u `robots.txt` i dodatno ima `noindex, nofollow`.
 ```ts
 newLexiconPath(); // /novi
 lexiconInvitePath("moj-leksikon"); // /l/moj-leksikon
+lexiconQuizPath("moj-leksikon"); // /l/moj-leksikon/kviz
 adminPath("abc123", "tajni-token"); // /admin/abc123?token=tajni-token
 editEntryPath("entry123", "tajni-token"); // /e/entry123?token=tajni-token
 ```
