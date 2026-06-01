@@ -1,12 +1,49 @@
-export const themeNames = [
-  "Bilježnica na kockice",
-  "Rozi gel pen",
-  "Y2K šljokice",
-  "Spomenar",
-  "Turbo 2002",
-] as const;
+export {
+  getCanonicalQuestionPackKey,
+  getQuestionPackByKey,
+  questionPackOptions,
+  questionPacks,
+} from "./question-packs.ts";
+export type {
+  QuestionPack,
+  QuestionPackKey,
+  QuestionPack as QuestionPackOption,
+} from "./question-packs.ts";
 
-export const stickerOptions = ["✨", "💖", "⭐", "🦋", "📼", "💿", "🌈", "😎"] as const;
+export const buttonVariants = ["primary", "secondary", "ghost", "danger"] as const;
+export const buttonSizes = ["sm", "md", "lg"] as const;
+export const stickerVariants = ["pink", "blue", "yellow", "purple", "green"] as const;
+export const statusTones = ["neutral", "pink", "blue", "yellow", "success"] as const;
+
+export type ButtonVariant = (typeof buttonVariants)[number];
+export type ButtonSize = (typeof buttonSizes)[number];
+export type StickerVariant = (typeof stickerVariants)[number];
+export type StatusTone = (typeof statusTones)[number];
+
+export type CoverThemeKey =
+  | "grid-notebook"
+  | "pink-gel-pen"
+  | "y2k-sparkle"
+  | "spomenar"
+  | "turbo-2002";
+
+export type CoverPaperVariant = "grid" | "lined" | "plain";
+
+export type CoverThemeOption = {
+  key: CoverThemeKey;
+  legacyKeys: readonly string[];
+  label: string;
+  name: string;
+  emoji: string;
+  description: string;
+  paperVariant: CoverPaperVariant;
+  accent: "blue" | "pink" | "purple" | "yellow" | "green";
+  tone: StatusTone;
+  sticker: string;
+  stickerSet: readonly string[];
+  accentClassName: string;
+  coverClassName: string;
+};
 
 export const coverThemeOptions = [
   {
@@ -14,125 +51,144 @@ export const coverThemeOptions = [
     legacyKeys: ["biljeznica-na-kockice"],
     label: "Bilježnica na kockice",
     name: "Bilježnica na kockice",
-    description: "Čista školska podloga za ekipe koje žele klasični leksikon.",
-    emoji: "✨",
+    emoji: "📓",
+    description: "Klasični školski leksikon s urednim kockicama.",
+    paperVariant: "grid",
     accent: "blue",
-    sticker: "✨",
+    tone: "blue",
+    sticker: "📓",
+    stickerSet: ["⭐", "✏️", "📓"],
+    accentClassName:
+      "border-[rgba(36,87,214,0.20)] bg-[rgba(36,87,214,0.08)]",
+    coverClassName: "cover-theme-grid-notebook",
   },
   {
     key: "pink-gel-pen",
     legacyKeys: ["rozi-gel-pen"],
     label: "Rozi gel pen",
     name: "Rozi gel pen",
-    description: "Topao, ženstven naglasak s malo 2000-ih sjaja.",
     emoji: "💖",
+    description: "Rozi gel-pen sjaj, srce i mekši Y2K moment.",
+    paperVariant: "lined",
     accent: "pink",
+    tone: "pink",
     sticker: "💖",
+    stickerSet: ["💖", "✨", "🌸"],
+    accentClassName:
+      "border-[rgba(224,68,157,0.22)] bg-[rgba(224,68,157,0.08)]",
+    coverClassName: "cover-theme-pink-gel-pen",
   },
   {
     key: "y2k-sparkle",
     legacyKeys: ["y2k-sljokice"],
     label: "Y2K šljokice",
     name: "Y2K šljokice",
-    description: "Razigraniji cover za ekipu koja želi nostalgični show.",
     emoji: "💿",
+    description: "Ljubičasti sparkle, CD naljepnice i malo više showa.",
+    paperVariant: "plain",
     accent: "purple",
+    tone: "pink",
     sticker: "💿",
+    stickerSet: ["💿", "✨", "⭐"],
+    accentClassName:
+      "border-[rgba(129,78,199,0.22)] bg-[rgba(129,78,199,0.08)]",
+    coverClassName: "cover-theme-y2k-sparkle",
   },
   {
     key: "spomenar",
     legacyKeys: [],
     label: "Spomenar",
     name: "Spomenar",
-    description: "Mekši, papirnati osjećaj za osobnije upise.",
     emoji: "🦋",
+    description: "Pastelni papir, selotejp detalji i nježniji spomenar ton.",
+    paperVariant: "lined",
     accent: "green",
+    tone: "success",
     sticker: "🦋",
+    stickerSet: ["🦋", "🌸", "💌"],
+    accentClassName:
+      "border-[rgba(9,139,104,0.20)] bg-[rgba(9,139,104,0.07)]",
+    coverClassName: "cover-theme-spomenar",
   },
   {
     key: "turbo-2002",
     legacyKeys: [],
     label: "Turbo 2002",
     name: "Turbo 2002",
-    description: "Energičan cover za najglasnije WhatsApp grupe.",
     emoji: "😎",
+    description: "Glasniji party cover za najživlje WhatsApp grupe.",
+    paperVariant: "grid",
     accent: "yellow",
+    tone: "yellow",
     sticker: "😎",
+    stickerSet: ["😎", "⚡", "💿"],
+    accentClassName:
+      "border-[rgba(151,116,0,0.24)] bg-[rgba(255,227,109,0.22)]",
+    coverClassName: "cover-theme-turbo-2002",
   },
-] as const;
+] as const satisfies readonly CoverThemeOption[];
 
-export const questionPackOptions = [
-  {
-    key: "osnovna-1998",
-    name: "Osnovna 1998.",
-    description: "Za ekipu iz razreda, prve simpatije i školske fore.",
-  },
-  {
-    key: "srednja-2004",
-    name: "Srednja 2004.",
-    description: "Za MSN statuse, CD-e i izlaske koji su postali mit.",
-  },
-  {
-    key: "reunion",
-    name: "Reunion ekipa",
-    description: "Za ponovno okupljanje ljudi koji se znaju sto godina.",
-  },
-  {
-    key: "djevojacka",
-    name: "Djevojačka / rođendan",
-    description: "Za slavlje, interne šale i malo nježne drame.",
-  },
+export const DEFAULT_COVER_THEME_KEY: CoverThemeKey = "grid-notebook";
+export const themeNames = coverThemeOptions.map((theme) => theme.label);
+export const stickerOptions = [
+  "✨",
+  "💖",
+  "⭐",
+  "🦋",
+  "📼",
+  "💿",
+  "🌈",
+  "😎",
 ] as const;
-
-export type CoverThemeOption = (typeof coverThemeOptions)[number];
-export type CoverThemeKey = CoverThemeOption["key"];
-export type QuestionPackOption = (typeof questionPackOptions)[number];
-export type QuestionPackKey = QuestionPackOption["key"];
 
 function normalizeOptionValue(value: string): string {
-  return value.trim();
+  return value.trim().toLocaleLowerCase("hr-HR");
 }
 
-export function getCoverThemeOption(
-  value: string | undefined,
-): CoverThemeOption {
+function findCoverTheme(value: string | undefined): CoverThemeOption | undefined {
   const normalized = normalizeOptionValue(value ?? "");
 
-  return (
-    coverThemeOptions.find(
-      (option) =>
-        option.key === normalized ||
-        (option.legacyKeys as readonly string[]).includes(normalized) ||
-        option.name === normalized ||
-        option.label === normalized,
-    ) ?? coverThemeOptions[0]
+  if (!normalized) {
+    return undefined;
+  }
+
+  return coverThemeOptions.find(
+    (option) =>
+      normalizeOptionValue(option.key) === normalized ||
+      option.legacyKeys.some(
+        (legacyKey) => normalizeOptionValue(legacyKey) === normalized,
+      ) ||
+      normalizeOptionValue(option.name) === normalized ||
+      normalizeOptionValue(option.label) === normalized,
   );
 }
+
+export function getCoverThemeByKey(
+  key: string | undefined,
+): CoverThemeOption {
+  return findCoverTheme(key) ?? coverThemeOptions[0];
+}
+
+export function getCoverThemeByValues(
+  ...values: Array<string | undefined>
+): CoverThemeOption {
+  for (const value of values) {
+    const theme = findCoverTheme(value);
+
+    if (theme) {
+      return theme;
+    }
+  }
+
+  return coverThemeOptions[0];
+}
+
+export const getCoverThemeOption = getCoverThemeByKey;
 
 export function getCanonicalCoverThemeKey(
   value: string,
 ): CoverThemeKey | undefined {
-  const normalized = normalizeOptionValue(value);
-  const option = coverThemeOptions.find(
-    (item) =>
-      item.key === normalized ||
-      (item.legacyKeys as readonly string[]).includes(normalized) ||
-      item.name === normalized ||
-      item.label === normalized,
-  );
-
-  return option?.key;
-}
-
-export function getCanonicalQuestionPackKey(
-  value: string,
-): QuestionPackKey | undefined {
-  const normalized = normalizeOptionValue(value);
-  const option = questionPackOptions.find(
-    (item) => item.key === normalized || item.name === normalized,
-  );
-
-  return option?.key;
+  return findCoverTheme(value)?.key;
 }
 
 export const stepLabels = [
@@ -150,16 +206,6 @@ export const badgeText = {
   quizLocked: "0/5 upisa do kviza",
   inviteReady: "Javni link za dijeljenje",
 } as const;
-
-export const buttonVariants = ["primary", "secondary", "ghost", "danger"] as const;
-export const buttonSizes = ["sm", "md", "lg"] as const;
-export const stickerVariants = ["pink", "blue", "yellow", "purple", "green"] as const;
-export const statusTones = ["neutral", "pink", "blue", "yellow", "success"] as const;
-
-export type ButtonVariant = (typeof buttonVariants)[number];
-export type ButtonSize = (typeof buttonSizes)[number];
-export type StickerVariant = (typeof stickerVariants)[number];
-export type StatusTone = (typeof statusTones)[number];
 
 export const semanticToneDescriptions = {
   background: "Topla papirnata podloga koja nosi nostalgiju bez šuma.",

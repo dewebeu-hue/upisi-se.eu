@@ -16,18 +16,15 @@ import { SparkleBurst } from "@/components/ui/SparkleBurst";
 import { copyTextToClipboard } from "@/lib/clipboard";
 import { cn } from "@/lib/class-names";
 import {
-  coverThemeOptions,
-  getCoverThemeOption,
+  getCoverThemeByValues,
   stickerOptions,
 } from "@/lib/design";
 import { getPublicErrorMessage } from "@/lib/errors";
 import { DISPLAY_NAME_MAX_LENGTH } from "@/lib/limits";
 import {
-  BASIC_ENTRY_QUESTIONS,
-  DEFAULT_ENTRY_QUESTIONS,
-  EXTENDED_ENTRY_QUESTIONS,
+  getQuestionPackByKey,
   type EntryQuestion,
-} from "@/lib/question-pack";
+} from "@/lib/question-packs";
 import { editEntryPath, lexiconThanksPath, newLexiconPath } from "@/lib/routes";
 import { createAbsoluteUrl } from "@/lib/share";
 
@@ -78,28 +75,11 @@ function toAbsolutePath(path: string): string {
   return origin ? createAbsoluteUrl(path, origin) : path;
 }
 
-function createInitialAnswers(): AnswerState {
-  return Object.fromEntries(
-    DEFAULT_ENTRY_QUESTIONS.map((question) => [question.id, ""]),
-  );
-}
-
-function getCoverThemeName(theme: string, coverStyle: string): string {
-  const option = getCoverThemeOption(coverStyle || theme);
-
-  return option.name;
-}
-
-function getCoverSticker(theme: string, coverStyle: string): string {
-  const option = getCoverThemeOption(coverStyle || theme);
-
-  return option.sticker;
-}
-
 function validateEntryForm(input: {
   displayName: string;
   answers: AnswerState;
   consentOwnerView: boolean;
+  questions: readonly EntryQuestion[];
 }): FieldErrors {
   const errors: FieldErrors = {};
   const displayName = input.displayName.trim();
@@ -110,7 +90,7 @@ function validateEntryForm(input: {
     errors.displayName = `Ime može imati najviše ${DISPLAY_NAME_MAX_LENGTH} znakova.`;
   }
 
-  for (const question of DEFAULT_ENTRY_QUESTIONS) {
+  for (const question of input.questions) {
     const value = (input.answers[question.id] ?? "").trim();
 
     if (question.required && !value) {
@@ -138,8 +118,9 @@ function hasErrors(errors: FieldErrors): boolean {
 function mapAnswers(
   answers: AnswerState,
   consentQuizUse: boolean,
+  questions: readonly EntryQuestion[],
 ) {
-  return DEFAULT_ENTRY_QUESTIONS.flatMap((question) => {
+  return questions.flatMap((question) => {
     const answer = (answers[question.id] ?? "").trim();
 
     if (!answer && !question.required) {
@@ -188,7 +169,7 @@ function CreateEntryFormInner({ slug }: CreateEntryFormProps) {
   const lexicon = useQuery(api.lexicons.getPublicLexiconBySlug, { slug });
   const createEntry = useMutation(api.entries.createEntry);
   const [displayName, setDisplayName] = useState("");
-  const [answers, setAnswers] = useState<AnswerState>(createInitialAnswers);
+  const [answers, setAnswers] = useState<AnswerState>({});
   const [selectedSticker, setSelectedSticker] = useState("");
   const [selectedMood, setSelectedMood] = useState("");
   const [consentOwnerView, setConsentOwnerView] = useState(false);
@@ -207,26 +188,27 @@ function CreateEntryFormInner({ slug }: CreateEntryFormProps) {
         : "Upis u tijeku";
 
   const coverTheme = lexicon
-    ? getCoverThemeName(lexicon.theme, lexicon.coverStyle)
-    : coverThemeOptions[0].name;
-  const coverSticker = lexicon
-    ? getCoverSticker(lexicon.theme, lexicon.coverStyle)
-    : "✨";
+    ? getCoverThemeByValues(lexicon.coverStyle, lexicon.theme)
+    : getCoverThemeByValues(undefined);
+  const questionPack = getQuestionPackByKey(lexicon?.questionPackKey);
+  const basicQuestions = questionPack.baseQuestions;
+  const extraQuestions = questionPack.extraQuestions;
+  const allQuestions = [...basicQuestions, ...extraQuestions];
 
   const basicAnswerCount = useMemo(
     () =>
-      BASIC_ENTRY_QUESTIONS.filter(
+      basicQuestions.filter(
         (question) => (answers[question.id] ?? "").trim().length > 0,
       ).length,
-    [answers],
+    [answers, basicQuestions],
   );
 
   const extendedAnswerCount = useMemo(
     () =>
-      EXTENDED_ENTRY_QUESTIONS.filter(
+      extraQuestions.filter(
         (question) => (answers[question.id] ?? "").trim().length > 0,
       ).length,
-    [answers],
+    [answers, extraQuestions],
   );
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -240,6 +222,7 @@ function CreateEntryFormInner({ slug }: CreateEntryFormProps) {
       displayName,
       answers,
       consentOwnerView,
+      questions: allQuestions,
     });
 
     if (hasErrors(nextErrors)) {
@@ -247,7 +230,7 @@ function CreateEntryFormInner({ slug }: CreateEntryFormProps) {
       return;
     }
 
-    const mappedAnswers = mapAnswers(answers, consentQuizUse);
+    const mappedAnswers = mapAnswers(answers, consentQuizUse, allQuestions);
 
     if (mappedAnswers.length === 0) {
       setErrors({ form: "Dodaj barem jedan odgovor." });
@@ -349,8 +332,8 @@ function CreateEntryFormInner({ slug }: CreateEntryFormProps) {
         <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
           <CoverPreview
             ownerName={lexicon.ownerName}
-            sticker={selectedSticker || coverSticker}
-            theme={coverTheme}
+            sticker={selectedSticker || coverTheme.sticker}
+            theme={coverTheme.key}
             title={lexicon.title}
           />
           <section className="relative space-y-5 overflow-hidden rounded-[1.25rem] border border-[rgba(9,139,104,0.24)] bg-[rgba(9,139,104,0.08)] p-5 shadow-[var(--shadow-soft)]">
@@ -429,16 +412,24 @@ function CreateEntryFormInner({ slug }: CreateEntryFormProps) {
         <aside className="space-y-4 lg:sticky lg:top-6">
           <CoverPreview
             ownerName={lexicon.ownerName}
-            sticker={selectedSticker || coverSticker}
-            theme={coverTheme}
+            sticker={selectedSticker || coverTheme.sticker}
+            theme={coverTheme.key}
             title={lexicon.title}
           />
-          <div className="rounded-[1.1rem] border border-[rgba(36,27,47,0.12)] bg-white/60 p-4">
-            <ProgressPill
-              className={lexicon.quizUnlocked ? "glitter-border" : undefined}
-              label={progressLabel}
-              tone={lexicon.quizUnlocked ? "success" : "yellow"}
-            />
+          <div
+            className={`rounded-[1.1rem] border p-4 ${coverTheme.accentClassName}`}
+          >
+            <div className="flex flex-wrap gap-2">
+              <ProgressPill
+                className={lexicon.quizUnlocked ? "glitter-border" : undefined}
+                label={progressLabel}
+                tone={lexicon.quizUnlocked ? "success" : "yellow"}
+              />
+              <ProgressPill
+                label={`Tema: ${coverTheme.label}`}
+                tone={coverTheme.tone}
+              />
+            </div>
             <p className="mt-3 text-sm leading-6 text-[var(--color-muted)]">
               Upisuješ se u leksikon koji vodi{" "}
               <span className="font-black text-[var(--color-ink)]">
@@ -480,7 +471,7 @@ function CreateEntryFormInner({ slug }: CreateEntryFormProps) {
 
             <div className="flex flex-wrap gap-2">
               <ProgressPill
-                label={`${basicAnswerCount}/${BASIC_ENTRY_QUESTIONS.length} osnovnih odgovora`}
+                label={`${basicAnswerCount}/${basicQuestions.length} osnovnih odgovora`}
                 tone="blue"
               />
               {extendedAnswerCount > 0 ? (
@@ -496,14 +487,15 @@ function CreateEntryFormInner({ slug }: CreateEntryFormProps) {
           <RetroCard className="space-y-6 p-5 sm:p-6" variant="paper">
             <div>
               <p className="text-sm font-black uppercase tracking-[0.14em] text-[var(--color-gel-pink)]">
-                Osnovna pitanja
+                Paket: {questionPack.label}
               </p>
               <p className="mt-2 text-sm leading-6 text-[var(--color-muted)]">
-                Kratki upis je sasvim dovoljan. Obavezna pitanja su označena,
-                a tajno pitanje može ostati prazno.
+                {questionPack.description} Obavezna pitanja su označena, a
+                privatna pitanja mogu ostati prazna.
               </p>
             </div>
-            {BASIC_ENTRY_QUESTIONS.map((question) => (
+            <ProgressPill label={questionPack.label} tone={coverTheme.tone} />
+            {basicQuestions.map((question) => (
               <QuestionField
                 disabled={isSubmitting}
                 error={errors[question.id]}
@@ -554,7 +546,7 @@ function CreateEntryFormInner({ slug }: CreateEntryFormProps) {
                   Sva dodatna pitanja su opcionalna. Prazna pitanja se neće
                   spremiti, a privatna poruka ostaje samo za vlasnicu.
                 </p>
-                {EXTENDED_ENTRY_QUESTIONS.map((question) => (
+                {extraQuestions.map((question) => (
                   <QuestionField
                     disabled={isSubmitting}
                     error={errors[question.id]}

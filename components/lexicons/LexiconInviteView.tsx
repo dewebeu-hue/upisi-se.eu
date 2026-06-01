@@ -9,7 +9,7 @@ import { NotebookPaper } from "@/components/ui/NotebookPaper";
 import { ProgressPill } from "@/components/ui/ProgressPill";
 import { SharePreviewCard } from "@/components/ui/SharePreviewCard";
 import { copyTextToClipboard } from "@/lib/clipboard";
-import { getCoverThemeOption } from "@/lib/design";
+import { getCoverThemeByValues } from "@/lib/design";
 import {
   createAbsoluteUrl,
   createInviteShareText,
@@ -40,18 +40,6 @@ type LexiconInviteViewProps = {
 
 const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
 
-function getCoverThemeName(theme: string, coverStyle: string): string {
-  const option = getCoverThemeOption(coverStyle || theme);
-
-  return option.name;
-}
-
-function getCoverSticker(theme: string, coverStyle: string): string {
-  const option = getCoverThemeOption(coverStyle || theme);
-
-  return option.sticker;
-}
-
 export function InviteShell({ children }: { children: ReactNode }) {
   return (
     <section className="mx-auto w-full max-w-6xl px-5 py-10 sm:px-8 sm:py-16">
@@ -79,8 +67,7 @@ export function LexiconInviteView({
   const entryCountLabel = lexicon.quizUnlocked
     ? "Kviz je otključan"
     : `${lexicon.entryCount}/${lexicon.quizUnlockEntryCount} upisa do kviza`;
-  const coverTheme = getCoverThemeName(lexicon.theme, lexicon.coverStyle);
-  const coverSticker = getCoverSticker(lexicon.theme, lexicon.coverStyle);
+  const coverTheme = getCoverThemeByValues(lexicon.coverStyle, lexicon.theme);
   const shareText = createInviteShareText(lexicon.ownerName, inviteUrl);
   const whatsAppUrl = createWhatsAppShareUrl(shareText, inviteUrl);
 
@@ -116,7 +103,7 @@ export function LexiconInviteView({
                 : "Odgovori na par nostalgičnih pitanja i ostavi joj stranicu u digitalnom leksikonu."
             }
             eyebrow={isDemo ? "Demo pozivnica" : "Pozivnica za leksikon"}
-            sticker={coverSticker}
+            sticker={coverTheme.sticker}
             title={`${lexicon.ownerName} te zove da se upišeš ✨`}
           />
 
@@ -129,10 +116,16 @@ export function LexiconInviteView({
               label={entryCountLabel}
               tone={lexicon.quizUnlocked ? "success" : "yellow"}
             />
+            <ProgressPill
+              label={`Tema: ${coverTheme.label}`}
+              tone={coverTheme.tone}
+            />
             <ProgressPill label="Nema registracije" tone="blue" />
           </div>
 
-          <div className="rounded-[1.25rem] border border-[rgba(36,27,47,0.12)] bg-white/64 p-5 shadow-[var(--shadow-soft)]">
+          <div
+            className={`rounded-[1.25rem] border p-5 shadow-[var(--shadow-soft)] ${coverTheme.accentClassName}`}
+          >
             <p className="text-sm font-black uppercase tracking-[0.14em] text-[var(--color-gel-pink)]">
               Tvoj sljedeći korak
             </p>
@@ -202,8 +195,8 @@ export function LexiconInviteView({
         <div className="space-y-4 lg:sticky lg:top-6">
           <CoverPreview
             ownerName={lexicon.ownerName}
-            sticker={coverSticker}
-            theme={coverTheme}
+            sticker={coverTheme.sticker}
+            theme={coverTheme.key}
             title={lexicon.title}
           />
           <div className="rounded-[1.1rem] border border-[rgba(36,27,47,0.12)] bg-white/60 p-4">

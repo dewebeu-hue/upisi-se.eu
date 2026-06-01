@@ -14,7 +14,7 @@ import { ProgressPill } from "@/components/ui/ProgressPill";
 import { SharePreviewCard } from "@/components/ui/SharePreviewCard";
 import { SparkleBurst } from "@/components/ui/SparkleBurst";
 import { copyTextToClipboard } from "@/lib/clipboard";
-import { getCoverThemeOption } from "@/lib/design";
+import { getCoverThemeByValues } from "@/lib/design";
 import { lexiconInvitePath, newLexiconPath } from "@/lib/routes";
 import {
   createAbsoluteUrl,
@@ -36,18 +36,6 @@ function ThankYouShell({ children }: { children: ReactNode }) {
       </NotebookPaper>
     </section>
   );
-}
-
-function getCoverThemeName(theme: string, coverStyle: string): string {
-  const option = getCoverThemeOption(coverStyle || theme);
-
-  return option.name;
-}
-
-function getCoverSticker(theme: string, coverStyle: string): string {
-  const option = getCoverThemeOption(coverStyle || theme);
-
-  return option.sticker;
 }
 
 function MissingConvexThankYouState() {
@@ -117,8 +105,7 @@ function EntryThankYouInner({ slug }: EntryThankYouProps) {
     );
   }
 
-  const coverTheme = getCoverThemeName(lexicon.theme, lexicon.coverStyle);
-  const coverSticker = getCoverSticker(lexicon.theme, lexicon.coverStyle);
+  const coverTheme = getCoverThemeByValues(lexicon.coverStyle, lexicon.theme);
   const progressLabel = lexicon.quizUnlocked
     ? "Kviz je otključan"
     : `${lexicon.entryCount}/${lexicon.quizUnlockEntryCount} upisa do kviza`;
@@ -160,12 +147,16 @@ function EntryThankYouInner({ slug }: EntryThankYouProps) {
           <NotebookHeader
             description={`Tvoj upis u "${lexicon.title}" je spremljen. Ako želiš nastaviti krug nostalgije, napravi svoj leksikon ili pošalji javnu pozivnicu još nekome.`}
             eyebrow="Hvala na upisu"
-            sticker={coverSticker}
+            sticker={coverTheme.sticker}
             title="Upisano ✨"
           />
 
           <div className="flex flex-wrap gap-2">
             <ProgressPill label="Bez registracije" tone="blue" />
+            <ProgressPill
+              label={`Tema: ${coverTheme.label}`}
+              tone={coverTheme.tone}
+            />
             <ProgressPill
               className={lexicon.quizUnlocked ? "glitter-border" : undefined}
               label={progressLabel}
@@ -173,7 +164,9 @@ function EntryThankYouInner({ slug }: EntryThankYouProps) {
             />
           </div>
 
-          <section className="relative space-y-5 overflow-hidden rounded-[1.25rem] border border-[rgba(9,139,104,0.24)] bg-[rgba(9,139,104,0.08)] p-5 shadow-[var(--shadow-soft)]">
+          <section
+            className={`relative space-y-5 overflow-hidden rounded-[1.25rem] border p-5 shadow-[var(--shadow-soft)] ${coverTheme.accentClassName}`}
+          >
             <SparkleBurst />
             <div>
               <p className="text-sm font-black uppercase tracking-[0.14em] text-[var(--color-success)]">
@@ -253,8 +246,8 @@ function EntryThankYouInner({ slug }: EntryThankYouProps) {
         <div className="space-y-4 lg:sticky lg:top-6">
           <CoverPreview
             ownerName={lexicon.ownerName}
-            sticker={coverSticker}
-            theme={coverTheme}
+            sticker={coverTheme.sticker}
+            theme={coverTheme.key}
             title={lexicon.title}
           />
           <div className="space-y-4 rounded-[1.1rem] border border-[rgba(36,27,47,0.12)] bg-white/60 p-4">

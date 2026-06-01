@@ -17,7 +17,7 @@ import { SharePreviewCard } from "@/components/ui/SharePreviewCard";
 import { Sticker } from "@/components/ui/Sticker";
 import { copyTextToClipboard } from "@/lib/clipboard";
 import { formatShortDateTime } from "@/lib/date";
-import { getCoverThemeOption } from "@/lib/design";
+import { getCoverThemeByValues } from "@/lib/design";
 import { lexiconInvitePath, newLexiconPath } from "@/lib/routes";
 import { createAbsoluteUrl } from "@/lib/share";
 
@@ -65,18 +65,6 @@ function DashboardShell({ children }: { children: ReactNode }) {
       </NotebookPaper>
     </section>
   );
-}
-
-function getCoverThemeName(theme: string, coverStyle: string): string {
-  const option = getCoverThemeOption(coverStyle || theme);
-
-  return option.name;
-}
-
-function getCoverSticker(theme: string, coverStyle: string): string {
-  const option = getCoverThemeOption(coverStyle || theme);
-
-  return option.sticker;
 }
 
 function MissingConvexState() {
@@ -208,8 +196,7 @@ function AdminDashboardWithConvex({ lexiconId, token }: AdminDashboardProps) {
 
   const { lexicon, entries } = dashboard;
   const adminToken = normalizedToken;
-  const coverTheme = getCoverThemeName(lexicon.theme, lexicon.coverStyle);
-  const coverSticker = getCoverSticker(lexicon.theme, lexicon.coverStyle);
+  const coverTheme = getCoverThemeByValues(lexicon.coverStyle, lexicon.theme);
   const progressLabel = lexicon.quizUnlocked
     ? "Kviz je otključan"
     : `${lexicon.entryCount}/${lexicon.quizUnlockEntryCount} upisa do kviza`;
@@ -269,12 +256,16 @@ function AdminDashboardWithConvex({ lexiconId, token }: AdminDashboardProps) {
           <NotebookHeader
             description="Čuvaj ovaj privatni link — bez njega u MVP-u nema oporavka pregleda."
             eyebrow="Privatni pregled"
-            sticker={coverSticker}
+            sticker={coverTheme.sticker}
             title={lexicon.title}
           />
 
           <div className="flex flex-wrap gap-2">
             <ProgressPill label="Privatni link za pregled" tone="blue" />
+            <ProgressPill
+              label={`Tema: ${coverTheme.label}`}
+              tone={coverTheme.tone}
+            />
             <ProgressPill
               className={lexicon.quizUnlocked ? "glitter-border" : undefined}
               label={progressLabel}
@@ -309,7 +300,9 @@ function AdminDashboardWithConvex({ lexiconId, token }: AdminDashboardProps) {
             </RetroCard>
           </section>
 
-          <section className="space-y-5 rounded-[1.25rem] border border-[rgba(36,27,47,0.12)] bg-white/64 p-5 shadow-[var(--shadow-soft)]">
+          <section
+            className={`space-y-5 rounded-[1.25rem] border p-5 shadow-[var(--shadow-soft)] ${coverTheme.accentClassName}`}
+          >
             <div>
               <p className="text-sm font-black uppercase tracking-[0.14em] text-[var(--color-gel-blue)]">
                 Javni invite link
@@ -448,8 +441,8 @@ function AdminDashboardWithConvex({ lexiconId, token }: AdminDashboardProps) {
         <aside className="space-y-4 lg:sticky lg:top-6">
           <CoverPreview
             ownerName={lexicon.ownerName}
-            sticker={coverSticker}
-            theme={coverTheme}
+            sticker={coverTheme.sticker}
+            theme={coverTheme.key}
             title={lexicon.title}
           />
           <RetroCard className="space-y-3 p-4" variant="notebook" withTape>

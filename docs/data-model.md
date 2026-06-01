@@ -57,6 +57,10 @@ Canonical question pack keyjevi:
 - `reunion`
 - `djevojacka`
 
+`theme` i `coverStyle` nisu samo metadata: UI ih koristi za isti vizualni stil kroz javnu pozivnicu, formu upisa, thank-you stranicu i privatni admin pregled. Ako je key nepoznat ili dolazi iz starijeg dokumenta, frontend koristi fallback `grid-notebook`.
+
+`questionPackKey` bira stvarni set pitanja u `/l/[slug]/upis`. Pitanja su trenutačno centralizirana u `lib/question-packs.ts`, a buduća Convex `questionPacks` tablica može preuzeti isti shape. Ako je key nepoznat, forma koristi fallback `osnovna-1998`.
+
 ### entries
 
 Jedan dokument predstavlja jedan upis prijateljice u leksikon.

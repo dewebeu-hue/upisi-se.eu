@@ -264,7 +264,7 @@ function CreateLexiconFormInner() {
         <CoverPreview
           ownerName={ownerName.trim() || "Tvoje ime"}
           sticker={selectedCover.sticker}
-          theme={selectedCover.name}
+          theme={selectedCover.key}
           title={title.trim() || "Moj leksikon"}
         />
 
@@ -351,7 +351,7 @@ function CreateLexiconFormInner() {
         <CoverPreview
           ownerName={ownerName.trim() || "Tvoje ime"}
           sticker={selectedCover.sticker}
-          theme={selectedCover.name}
+          theme={selectedCover.key}
           title={title.trim() || "Moj leksikon"}
         />
         <div className="rounded-[1.1rem] border border-[rgba(36,27,47,0.12)] bg-white/60 p-4">
@@ -450,10 +450,25 @@ function CreateLexiconFormInner() {
                 key={option.key}
                 name="questionPack"
                 onChange={() => setQuestionPackKey(option.key)}
-                title={option.name}
+                title={option.label}
                 value={option.key}
               />
             ))}
+          </div>
+          <div className="mt-4 rounded-[1rem] border border-[rgba(36,27,47,0.12)] bg-white/60 p-4">
+            <p className="text-xs font-black uppercase tracking-[0.12em] text-[var(--color-gel-purple)]">
+              Primjeri pitanja iz paketa
+            </p>
+            <ul className="mt-3 space-y-2 text-sm leading-6 text-[var(--color-muted)]">
+              {selectedQuestionPack.previewQuestions
+                .slice(0, 3)
+                .map((question) => (
+                  <li className="flex gap-2" key={question}>
+                    <span aria-hidden="true">✦</span>
+                    <span>{question}</span>
+                  </li>
+                ))}
+            </ul>
           </div>
           <FieldError message={errors.questionPackKey} />
         </fieldset>

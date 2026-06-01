@@ -38,7 +38,13 @@ import {
 import {
   getCanonicalCoverThemeKey,
   getCanonicalQuestionPackKey,
+  getCoverThemeByKey,
+  getCoverThemeByValues,
 } from "../lib/design.ts";
+import {
+  getQuestionPackByKey,
+  questionPackOptions,
+} from "../lib/question-packs.ts";
 import {
   ACTIVE_STATUS,
   DELETED_STATUS,
@@ -257,6 +263,8 @@ test("cover and question pack validators normalize labels and legacy keys", () =
   assert.equal(getCanonicalCoverThemeKey("turbo-2002"), "turbo-2002");
   assert.equal(getCanonicalCoverThemeKey("Turbo 2002"), "turbo-2002");
   assert.equal(getCanonicalCoverThemeKey("rozi-gel-pen"), "pink-gel-pen");
+  assert.equal(getCoverThemeByKey("unknown-theme").key, "grid-notebook");
+  assert.equal(getCoverThemeByValues("unknown-theme", "spomenar").key, "spomenar");
   assert.equal(validateThemeKey("Y2K šljokice"), "y2k-sparkle");
   assert.equal(validateQuestionPackKey("osnovna-1998"), "osnovna-1998");
   assert.equal(getCanonicalQuestionPackKey("Djevojačka / rođendan"), "djevojacka");
@@ -266,6 +274,22 @@ test("cover and question pack validators normalize labels and legacy keys", () =
     () => validateQuestionPackKey("random-pack"),
     AppValidationError,
   );
+});
+
+test("question packs expose distinct entry questions with a safe fallback", () => {
+  assert.equal(questionPackOptions.length, 4);
+  assert.equal(getQuestionPackByKey(undefined).key, "osnovna-1998");
+
+  const osnovna = getQuestionPackByKey("osnovna-1998");
+  const srednja = getQuestionPackByKey("srednja-2004");
+  const reunion = getQuestionPackByKey("reunion");
+  const djevojacka = getQuestionPackByKey("djevojacka");
+
+  assert.match(osnovna.baseQuestions[0].label, /osnovnu/);
+  assert.match(srednja.baseQuestions[0].label, /MSN status/);
+  assert.match(reunion.baseQuestions[0].label, /danas/);
+  assert.match(djevojacka.baseQuestions[0].label, /uspomena s njom/);
+  assert.notEqual(osnovna.baseQuestions[0].id, srednja.baseQuestions[0].id);
 });
 
 test("public error messages hide unknown internals but keep validation copy", () => {

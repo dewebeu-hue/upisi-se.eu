@@ -34,11 +34,14 @@ Ako ne koristiš dev seed, unesi testne podatke ručno:
 - Otvori `/`.
 - Provjeri da CTA `Vidi primjer pozivnice` otvara `/demo/pozivnica`.
 - Otvori `/novi`.
+- Promijeni nekoliko tema korica i provjeri da se CoverPreview vidljivo mijenja.
+- Promijeni nekoliko paketa pitanja i provjeri da preview pitanja ispod odabira stvarno mijenja sadržaj.
 - Kreiraj leksikon.
 - Kopiraj javni invite link.
 - Kopiraj privatni link za pregled.
 - Otvori invite link.
 - Klikni `Upiši se`.
+- Provjeri da `/l/[slug]/upis` prikazuje pitanja iz odabranog paketa, a ne generički isti set za svaki leksikon.
 - Ispuni osnovna pitanja u formi.
 - Provjeri da je sekcija `Želim ispuniti još pitanja ✨` zatvorena po defaultu.
 - Pošalji upis s praznim dodatnim pitanjima i provjeri da submit nije blokiran.
@@ -86,6 +89,8 @@ Ako ne koristiš dev seed, unesi testne podatke ručno:
 
 ## E) UI/mobile checks
 
+- Cover theme badge i CoverPreview izgled ostaju dosljedni na invite, upis, hvala i admin stranicama.
+- Testiraj barem dva različita paketa pitanja i potvrdi da se labeli/form fields razlikuju.
 - Mobile landing nema horizontalni scroll.
 - Mobile `/novi` ima pune širine inpute i jasan primarni CTA.
 - Mobile invite jasno razlikuje `Upiši se` od `Napravi svoj leksikon`.

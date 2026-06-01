@@ -36,6 +36,8 @@ Ruta `/l/[slug]` je javna i koristi slug kao čitljiv dio linka koji se dijeli u
 
 Stranica dohvaća leksikon preko `getPublicLexiconBySlug` i prikazuje samo public-safe podatke: naslov, vlasnicu, temu/korice, broj upisa i status kviza. Ne prikazuje `adminToken`, `adminTokenHash`, privatni admin link, edit/delete tokene ni same upise.
 
+Cover theme key (`grid-notebook`, `pink-gel-pen`, `y2k-sparkle`, `spomenar`, `turbo-2002`) mijenja CoverPreview i male theme badge/accent detalje kroz invite, upis, hvala i admin flow. Ako je key star ili nepoznat, UI koristi fallback `grid-notebook`.
+
 Primarna akcija vodi na `/l/[slug]/upis`. Sekundarna akcija vodi na `/novi` za osobu koja želi napraviti svoj leksikon.
 
 Metadata za ovu rutu koristi samo public-safe podatke. Ako server-side Convex dohvat nije dostupan lokalno, stranica i OG ruta koriste brendirani fallback bez privatnih podataka.
@@ -62,6 +64,8 @@ Forma ima dvije grupe pitanja:
 
 - osnovna pitanja su odmah vidljiva i drže flow kratkim
 - dodatna pitanja su opcionalna i zatvorena po defaultu u sekciji `Želim ispuniti još pitanja ✨`
+
+Set pitanja dolazi iz `lexicon.questionPackKey`. Validni keyjevi su `osnovna-1998`, `srednja-2004`, `reunion` i `djevojacka`; nepoznati key pada na fallback `osnovna-1998`. UI labeli paketa nisu isto što i stabilni keyjevi.
 
 Prazna dodatna pitanja se ne šalju u `answers` array. Ako je dodatno pitanje popunjeno, validira se prema svom `maxLength`. Privatno `optionalSecret` pitanje sprema se samo ako nije prazno, označeno je kao `ownerOnly` i ne ulazi u budući kviz.
 

@@ -130,7 +130,7 @@ export default function Home() {
           <CoverPreview
             ownerName="Ana"
             sticker="✨"
-            theme="Rozi gel pen"
+            theme="pink-gel-pen"
             title="Leksikon naše ekipe"
           />
           <SharePreviewCard
