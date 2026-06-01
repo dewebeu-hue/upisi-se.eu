@@ -10,37 +10,52 @@ export const stickerOptions = ["✨", "💖", "⭐", "🦋", "📼", "💿", "�
 
 export const coverThemeOptions = [
   {
-    key: "biljeznica-na-kockice",
+    key: "grid-notebook",
+    legacyKeys: ["biljeznica-na-kockice"],
+    label: "Bilježnica na kockice",
     name: "Bilježnica na kockice",
     description: "Čista školska podloga za ekipe koje žele klasični leksikon.",
+    emoji: "✨",
     accent: "blue",
     sticker: "✨",
   },
   {
-    key: "rozi-gel-pen",
+    key: "pink-gel-pen",
+    legacyKeys: ["rozi-gel-pen"],
+    label: "Rozi gel pen",
     name: "Rozi gel pen",
     description: "Topao, ženstven naglasak s malo 2000-ih sjaja.",
+    emoji: "💖",
     accent: "pink",
     sticker: "💖",
   },
   {
-    key: "y2k-sljokice",
+    key: "y2k-sparkle",
+    legacyKeys: ["y2k-sljokice"],
+    label: "Y2K šljokice",
     name: "Y2K šljokice",
     description: "Razigraniji cover za ekipu koja želi nostalgični show.",
+    emoji: "💿",
     accent: "purple",
     sticker: "💿",
   },
   {
     key: "spomenar",
+    legacyKeys: [],
+    label: "Spomenar",
     name: "Spomenar",
     description: "Mekši, papirnati osjećaj za osobnije upise.",
+    emoji: "🦋",
     accent: "green",
     sticker: "🦋",
   },
   {
     key: "turbo-2002",
+    legacyKeys: [],
+    label: "Turbo 2002",
     name: "Turbo 2002",
     description: "Energičan cover za najglasnije WhatsApp grupe.",
+    emoji: "😎",
     accent: "yellow",
     sticker: "😎",
   },
@@ -68,6 +83,57 @@ export const questionPackOptions = [
     description: "Za slavlje, interne šale i malo nježne drame.",
   },
 ] as const;
+
+export type CoverThemeOption = (typeof coverThemeOptions)[number];
+export type CoverThemeKey = CoverThemeOption["key"];
+export type QuestionPackOption = (typeof questionPackOptions)[number];
+export type QuestionPackKey = QuestionPackOption["key"];
+
+function normalizeOptionValue(value: string): string {
+  return value.trim();
+}
+
+export function getCoverThemeOption(
+  value: string | undefined,
+): CoverThemeOption {
+  const normalized = normalizeOptionValue(value ?? "");
+
+  return (
+    coverThemeOptions.find(
+      (option) =>
+        option.key === normalized ||
+        (option.legacyKeys as readonly string[]).includes(normalized) ||
+        option.name === normalized ||
+        option.label === normalized,
+    ) ?? coverThemeOptions[0]
+  );
+}
+
+export function getCanonicalCoverThemeKey(
+  value: string,
+): CoverThemeKey | undefined {
+  const normalized = normalizeOptionValue(value);
+  const option = coverThemeOptions.find(
+    (item) =>
+      item.key === normalized ||
+      (item.legacyKeys as readonly string[]).includes(normalized) ||
+      item.name === normalized ||
+      item.label === normalized,
+  );
+
+  return option?.key;
+}
+
+export function getCanonicalQuestionPackKey(
+  value: string,
+): QuestionPackKey | undefined {
+  const normalized = normalizeOptionValue(value);
+  const option = questionPackOptions.find(
+    (item) => item.key === normalized || item.name === normalized,
+  );
+
+  return option?.key;
+}
 
 export const stepLabels = [
   "Napravi leksikon",

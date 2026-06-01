@@ -107,7 +107,7 @@ Funkcija `backfillLexiconDefaults` prolazi kroz postojeće leksikone i patcha sa
 Default vrijednosti:
 
 ```text
-coverStyle: "Bilježnica na kockice"
+coverStyle: "grid-notebook"
 theme: "grid-notebook"
 questionPackKey: "osnovna-1998"
 quizUnlockEntryCount: 5

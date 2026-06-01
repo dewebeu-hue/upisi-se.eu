@@ -3,7 +3,7 @@ import type { Doc } from "./_generated/dataModel";
 import { QUIZ_UNLOCK_ENTRY_COUNT } from "../lib/limits";
 import { ACTIVE_STATUS, now } from "./shared";
 
-const DEFAULT_LEXICON_COVER_STYLE = "Bilježnica na kockice";
+const DEFAULT_LEXICON_COVER_STYLE = "grid-notebook";
 const DEFAULT_LEXICON_THEME = "grid-notebook";
 const DEFAULT_QUESTION_PACK_KEY = "osnovna-1998";
 

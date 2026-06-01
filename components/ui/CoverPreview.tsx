@@ -1,5 +1,5 @@
 import { cn } from "@/lib/class-names";
-import { coverThemeOptions } from "@/lib/design";
+import { getCoverThemeOption } from "@/lib/design";
 import { ProgressPill } from "@/components/ui/ProgressPill";
 import { Sparkle } from "@/components/ui/Sparkle";
 import { Sticker } from "@/components/ui/Sticker";
@@ -28,9 +28,7 @@ export function CoverPreview({
   sticker,
   className,
 }: CoverPreviewProps) {
-  const themeOption =
-    coverThemeOptions.find((option) => option.name === theme) ??
-    coverThemeOptions[0];
+  const themeOption = getCoverThemeOption(theme);
   const displaySticker = sticker ?? themeOption.sticker;
 
   return (

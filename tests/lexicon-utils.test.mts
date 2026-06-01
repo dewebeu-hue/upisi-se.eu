@@ -27,8 +27,14 @@ import {
   validateDisplayName,
   validateLexiconTitle,
   validateOptionalText,
+  validateQuestionPackKey,
   validateRequiredText,
+  validateThemeKey,
 } from "../lib/validation.ts";
+import {
+  getCanonicalCoverThemeKey,
+  getCanonicalQuestionPackKey,
+} from "../lib/design.ts";
 import {
   ACTIVE_STATUS,
   DELETED_STATUS,
@@ -239,6 +245,21 @@ test("validation helpers normalize text and reject unsafe input shapes", () => {
           isPrivate: "no",
         },
       ]),
+    AppValidationError,
+  );
+});
+
+test("cover and question pack validators normalize labels and legacy keys", () => {
+  assert.equal(getCanonicalCoverThemeKey("turbo-2002"), "turbo-2002");
+  assert.equal(getCanonicalCoverThemeKey("Turbo 2002"), "turbo-2002");
+  assert.equal(getCanonicalCoverThemeKey("rozi-gel-pen"), "pink-gel-pen");
+  assert.equal(validateThemeKey("Y2K šljokice"), "y2k-sparkle");
+  assert.equal(validateQuestionPackKey("osnovna-1998"), "osnovna-1998");
+  assert.equal(getCanonicalQuestionPackKey("Djevojačka / rođendan"), "djevojacka");
+
+  assert.throws(() => validateThemeKey("random-theme"), AppValidationError);
+  assert.throws(
+    () => validateQuestionPackKey("random-pack"),
     AppValidationError,
   );
 });

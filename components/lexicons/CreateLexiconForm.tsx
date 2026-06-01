@@ -11,7 +11,13 @@ import { ProgressPill } from "@/components/ui/ProgressPill";
 import { SharePreviewCard } from "@/components/ui/SharePreviewCard";
 import { SparkleBurst } from "@/components/ui/SparkleBurst";
 import { cn } from "@/lib/class-names";
-import { coverThemeOptions, questionPackOptions } from "@/lib/design";
+import {
+  coverThemeOptions,
+  getCoverThemeOption,
+  questionPackOptions,
+  type CoverThemeKey,
+  type QuestionPackKey,
+} from "@/lib/design";
 import { getPublicErrorMessage } from "@/lib/errors";
 import {
   LEXICON_TITLE_MAX_LENGTH,
@@ -36,9 +42,6 @@ type CreatedLexicon = {
 };
 
 type CopyTarget = "invite" | "admin";
-type CoverThemeKey = (typeof coverThemeOptions)[number]["key"];
-type QuestionPackKey = (typeof questionPackOptions)[number]["key"];
-
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
 function getConfiguredOrigin(): string {
@@ -146,9 +149,7 @@ function CreateLexiconFormInner() {
   const [copyError, setCopyError] = useState("");
 
   const selectedCover = useMemo(
-    () =>
-      coverThemeOptions.find((option) => option.key === coverKey) ??
-      coverThemeOptions[0],
+    () => getCoverThemeOption(coverKey),
     [coverKey],
   );
 
@@ -397,7 +398,7 @@ function CreateLexiconFormInner() {
                 key={option.key}
                 name="cover"
                 onChange={() => setCoverKey(option.key)}
-                title={`${option.sticker} ${option.name}`}
+                title={`${option.emoji} ${option.label}`}
                 value={option.key}
               />
             ))}

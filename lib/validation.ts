@@ -1,5 +1,9 @@
 import { AppValidationError } from "./errors.ts";
 import {
+  getCanonicalCoverThemeKey,
+  getCanonicalQuestionPackKey,
+} from "./design.ts";
+import {
   DISPLAY_NAME_MAX_LENGTH,
   LEXICON_TITLE_MAX_LENGTH,
   LONG_ANSWER_MAX_LENGTH,
@@ -8,7 +12,6 @@ import {
   SHORT_ANSWER_MAX_LENGTH,
   SLUG_MAX_LENGTH,
 } from "./limits.ts";
-import { isValidSlug } from "./slug.ts";
 
 export type ValidatedAnswer = {
   questionId: string;
@@ -185,26 +188,28 @@ export function validateDisplayName(value: string): string {
 
 export function validateQuestionPackKey(value: string): string {
   const key = validateRequiredText(value, "Ključ paketa pitanja", SLUG_MAX_LENGTH);
+  const canonicalKey = getCanonicalQuestionPackKey(key);
 
-  if (!isValidSlug(key)) {
+  if (!canonicalKey) {
     throw new AppValidationError(
       "question_pack_key_invalid",
       "Ključ paketa pitanja nije valjan.",
     );
   }
 
-  return key;
+  return canonicalKey;
 }
 
 export function validateThemeKey(value: string): string {
   const key = validateRequiredText(value, "Ključ teme", SLUG_MAX_LENGTH);
+  const canonicalKey = getCanonicalCoverThemeKey(key);
 
-  if (!isValidSlug(key)) {
+  if (!canonicalKey) {
     throw new AppValidationError(
       "theme_key_invalid",
       "Ključ teme nije valjan.",
     );
   }
 
-  return key;
+  return canonicalKey;
 }

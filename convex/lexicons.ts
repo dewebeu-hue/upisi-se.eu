@@ -14,6 +14,7 @@ import {
   QUIZ_UNLOCK_ENTRY_COUNT,
   SLUG_MAX_LENGTH,
 } from "../lib/limits";
+import { getCanonicalCoverThemeKey } from "../lib/design";
 import {
   validateLexiconTitle,
   validateOwnerName,
@@ -28,15 +29,16 @@ const INVALID_PRIVATE_LINK_MESSAGE =
 
 function validateCoverStyle(value: string): string {
   const coverStyle = validateRequiredText(value, "Stil korica", SLUG_MAX_LENGTH);
+  const canonicalCoverStyle = getCanonicalCoverThemeKey(coverStyle);
 
-  if (!isValidSlug(coverStyle)) {
+  if (!canonicalCoverStyle) {
     throw new AppValidationError(
       "cover_style_invalid",
       "Stil korica nije valjan.",
     );
   }
 
-  return coverStyle;
+  return canonicalCoverStyle;
 }
 
 function createInvitePath(slug: string): string {

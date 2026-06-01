@@ -186,11 +186,13 @@ migrations:backfillLexiconDefaults
 Default vrijednosti:
 
 ```text
-coverStyle: "Bilježnica na kockice"
+coverStyle: "grid-notebook"
 theme: "grid-notebook"
 questionPackKey: "osnovna-1998"
 quizUnlockEntryCount: 5
 ```
+
+UI labeli nisu validacijski keyjevi. `/novi` smije prikazati label poput `Turbo 2002`, ali mutation payload mora slati canonical key `turbo-2002`. Backend normalizira poznate legacy keyjeve i poznate labele u canonical key, ali novi podaci trebaju spremati samo canonical vrijednosti.
 
 Ako je funkcija već deployana i dostupna u dashboard/dev tools, pokreni je bez argumenata. Ne briše podatke, ne mijenja `adminTokenHash`, ne generira novi token i patcha samo polja koja nedostaju.
 

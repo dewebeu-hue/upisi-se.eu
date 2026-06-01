@@ -9,7 +9,7 @@ import { NotebookPaper } from "@/components/ui/NotebookPaper";
 import { ProgressPill } from "@/components/ui/ProgressPill";
 import { SharePreviewCard } from "@/components/ui/SharePreviewCard";
 import { copyTextToClipboard } from "@/lib/clipboard";
-import { coverThemeOptions } from "@/lib/design";
+import { getCoverThemeOption } from "@/lib/design";
 import {
   createAbsoluteUrl,
   createInviteShareText,
@@ -41,20 +41,13 @@ type LexiconInviteViewProps = {
 const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
 
 function getCoverThemeName(theme: string, coverStyle: string): string {
-  const option =
-    coverThemeOptions.find((item) => item.key === coverStyle) ??
-    coverThemeOptions.find((item) => item.key === theme) ??
-    coverThemeOptions.find((item) => item.name === coverStyle) ??
-    coverThemeOptions[0];
+  const option = getCoverThemeOption(coverStyle || theme);
 
   return option.name;
 }
 
 function getCoverSticker(theme: string, coverStyle: string): string {
-  const option =
-    coverThemeOptions.find((item) => item.key === coverStyle) ??
-    coverThemeOptions.find((item) => item.key === theme) ??
-    coverThemeOptions[0];
+  const option = getCoverThemeOption(coverStyle || theme);
 
   return option.sticker;
 }

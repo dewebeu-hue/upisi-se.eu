@@ -15,7 +15,11 @@ import { ProgressPill } from "@/components/ui/ProgressPill";
 import { SparkleBurst } from "@/components/ui/SparkleBurst";
 import { copyTextToClipboard } from "@/lib/clipboard";
 import { cn } from "@/lib/class-names";
-import { coverThemeOptions, stickerOptions } from "@/lib/design";
+import {
+  coverThemeOptions,
+  getCoverThemeOption,
+  stickerOptions,
+} from "@/lib/design";
 import { getPublicErrorMessage } from "@/lib/errors";
 import { DISPLAY_NAME_MAX_LENGTH } from "@/lib/limits";
 import {
@@ -81,19 +85,13 @@ function createInitialAnswers(): AnswerState {
 }
 
 function getCoverThemeName(theme: string, coverStyle: string): string {
-  const option =
-    coverThemeOptions.find((item) => item.key === coverStyle) ??
-    coverThemeOptions.find((item) => item.key === theme) ??
-    coverThemeOptions[0];
+  const option = getCoverThemeOption(coverStyle || theme);
 
   return option.name;
 }
 
 function getCoverSticker(theme: string, coverStyle: string): string {
-  const option =
-    coverThemeOptions.find((item) => item.key === coverStyle) ??
-    coverThemeOptions.find((item) => item.key === theme) ??
-    coverThemeOptions[0];
+  const option = getCoverThemeOption(coverStyle || theme);
 
   return option.sticker;
 }

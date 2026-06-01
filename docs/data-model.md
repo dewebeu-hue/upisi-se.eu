@@ -40,6 +40,23 @@ Indeksi:
 
 Privatnosna napomena: `adminTokenHash` nikad nije plaintext token. Javni slug ne smije dati pristup admin podacima.
 
+UI labeli se ne spremaju kao validacijski ključevi. Forma prikazuje labele poput `Turbo 2002`, ali mutation payload šalje stabilne keyjeve poput `turbo-2002`. Za MVP `theme` i `coverStyle` privremeno koriste isti canonical cover key.
+
+Canonical cover/theme keyjevi:
+
+- `grid-notebook`
+- `pink-gel-pen`
+- `y2k-sparkle`
+- `spomenar`
+- `turbo-2002`
+
+Canonical question pack keyjevi:
+
+- `osnovna-1998`
+- `srednja-2004`
+- `reunion`
+- `djevojacka`
+
 ### entries
 
 Jedan dokument predstavlja jedan upis prijateljice u leksikon.
@@ -145,7 +162,7 @@ Za takve dokumente postoji jednokratni dev/internal backfill u `convex/migration
 
 Default vrijednosti za stare leksikone:
 
-- `coverStyle`: `"Bilježnica na kockice"`
+- `coverStyle`: `"grid-notebook"`
 - `theme`: `"grid-notebook"`
 - `questionPackKey`: `"osnovna-1998"`
 - `quizUnlockEntryCount`: `5`

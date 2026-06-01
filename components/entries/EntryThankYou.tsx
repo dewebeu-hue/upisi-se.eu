@@ -14,7 +14,7 @@ import { ProgressPill } from "@/components/ui/ProgressPill";
 import { SharePreviewCard } from "@/components/ui/SharePreviewCard";
 import { SparkleBurst } from "@/components/ui/SparkleBurst";
 import { copyTextToClipboard } from "@/lib/clipboard";
-import { coverThemeOptions } from "@/lib/design";
+import { getCoverThemeOption } from "@/lib/design";
 import { lexiconInvitePath, newLexiconPath } from "@/lib/routes";
 import {
   createAbsoluteUrl,
@@ -39,20 +39,13 @@ function ThankYouShell({ children }: { children: ReactNode }) {
 }
 
 function getCoverThemeName(theme: string, coverStyle: string): string {
-  const option =
-    coverThemeOptions.find((item) => item.key === coverStyle) ??
-    coverThemeOptions.find((item) => item.key === theme) ??
-    coverThemeOptions.find((item) => item.name === coverStyle) ??
-    coverThemeOptions[0];
+  const option = getCoverThemeOption(coverStyle || theme);
 
   return option.name;
 }
 
 function getCoverSticker(theme: string, coverStyle: string): string {
-  const option =
-    coverThemeOptions.find((item) => item.key === coverStyle) ??
-    coverThemeOptions.find((item) => item.key === theme) ??
-    coverThemeOptions[0];
+  const option = getCoverThemeOption(coverStyle || theme);
 
   return option.sticker;
 }

@@ -17,7 +17,7 @@ import { SharePreviewCard } from "@/components/ui/SharePreviewCard";
 import { Sticker } from "@/components/ui/Sticker";
 import { copyTextToClipboard } from "@/lib/clipboard";
 import { formatShortDateTime } from "@/lib/date";
-import { coverThemeOptions } from "@/lib/design";
+import { getCoverThemeOption } from "@/lib/design";
 import { lexiconInvitePath, newLexiconPath } from "@/lib/routes";
 import { createAbsoluteUrl } from "@/lib/share";
 
@@ -68,21 +68,13 @@ function DashboardShell({ children }: { children: ReactNode }) {
 }
 
 function getCoverThemeName(theme: string, coverStyle: string): string {
-  const option =
-    coverThemeOptions.find((item) => item.key === coverStyle) ??
-    coverThemeOptions.find((item) => item.key === theme) ??
-    coverThemeOptions.find((item) => item.name === coverStyle) ??
-    coverThemeOptions[0];
+  const option = getCoverThemeOption(coverStyle || theme);
 
   return option.name;
 }
 
 function getCoverSticker(theme: string, coverStyle: string): string {
-  const option =
-    coverThemeOptions.find((item) => item.key === coverStyle) ??
-    coverThemeOptions.find((item) => item.key === theme) ??
-    coverThemeOptions.find((item) => item.name === coverStyle) ??
-    coverThemeOptions[0];
+  const option = getCoverThemeOption(coverStyle || theme);
 
   return option.sticker;
 }
