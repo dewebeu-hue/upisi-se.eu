@@ -18,7 +18,7 @@ import {
   type CoverThemeKey,
   type QuestionPackKey,
 } from "@/lib/design";
-import { getPublicErrorMessage } from "@/lib/errors";
+import { getSafeDebugErrorMessage } from "@/lib/errors";
 import {
   LEXICON_TITLE_MAX_LENGTH,
   OWNER_NAME_MAX_LENGTH,
@@ -41,8 +41,26 @@ type CreatedLexicon = {
   adminUrl: string;
 };
 
+type CreateLexiconDebugPayload = {
+  ownerName: string;
+  title: string;
+  theme: CoverThemeKey;
+  coverStyle: CoverThemeKey;
+  questionPackKey: QuestionPackKey;
+};
+
+type CreateLexiconDebugState = {
+  debugPayload: CreateLexiconDebugPayload;
+  safeErrorMessage: string;
+};
+
 type CopyTarget = "invite" | "admin";
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+const showDebugErrors =
+  process.env.NODE_ENV !== "production" ||
+  process.env.NEXT_PUBLIC_SHOW_DEBUG_ERRORS === "true";
+const genericCreateErrorMessage =
+  "Nešto je pošlo po zlu. Pokušaj ponovno.";
 
 function getConfiguredOrigin(): string {
   if (siteUrl?.trim()) {
@@ -141,6 +159,9 @@ function CreateLexiconFormInner() {
     questionPackOptions[0].key,
   );
   const [errors, setErrors] = useState<FieldErrors>({});
+  const [debugState, setDebugState] = useState<CreateLexiconDebugState | null>(
+    null,
+  );
   const [createdLexicon, setCreatedLexicon] = useState<CreatedLexicon | null>(
     null,
   );
@@ -173,22 +194,26 @@ function CreateLexiconFormInner() {
     if (hasErrors(nextErrors)) {
       setErrors(nextErrors);
       setCreatedLexicon(null);
+      setDebugState(null);
       return;
     }
 
     setErrors({});
+    setDebugState(null);
     setCopyError("");
     setCopiedTarget(null);
     setIsSubmitting(true);
 
+    const debugPayload: CreateLexiconDebugPayload = {
+      ownerName: ownerName.trim(),
+      title: title.trim(),
+      theme: selectedCover.key,
+      coverStyle: selectedCover.key,
+      questionPackKey: selectedQuestionPack.key,
+    };
+
     try {
-      const result = await createLexicon({
-        ownerName: ownerName.trim(),
-        title: title.trim(),
-        theme: selectedCover.key,
-        coverStyle: selectedCover.key,
-        questionPackKey: selectedQuestionPack.key,
-      });
+      const result = await createLexicon(debugPayload);
 
       setCreatedLexicon({
         slug: result.slug,
@@ -197,9 +222,14 @@ function CreateLexiconFormInner() {
         inviteUrl: toAbsoluteUrl(result.invitePath),
         adminUrl: toAbsoluteUrl(result.adminPath),
       });
+      setDebugState(null);
     } catch (error) {
       setErrors({
-        form: getPublicErrorMessage(error),
+        form: genericCreateErrorMessage,
+      });
+      setDebugState({
+        debugPayload,
+        safeErrorMessage: getSafeDebugErrorMessage(error),
       });
       setCreatedLexicon(null);
     } finally {
@@ -429,9 +459,33 @@ function CreateLexiconFormInner() {
         </fieldset>
 
         {errors.form ? (
-          <p className="state-message border-[rgba(190,38,78,0.28)] text-[var(--color-danger)]">
-            {errors.form}
-          </p>
+          <div
+            aria-live="polite"
+            className="state-message border-[rgba(190,38,78,0.28)] text-[var(--color-danger)]"
+            role="alert"
+          >
+            <p className="font-semibold">{errors.form}</p>
+            {showDebugErrors && debugState ? (
+              <div className="mt-4 space-y-3 rounded-[0.9rem] border border-[rgba(36,27,47,0.12)] bg-white/70 p-4 text-[var(--color-ink)]">
+                <div>
+                  <p className="text-xs font-black uppercase tracking-[0.08em] text-[var(--color-muted)]">
+                    Debug payload
+                  </p>
+                  <pre className="mt-2 max-h-52 overflow-auto whitespace-pre-wrap break-words rounded-[0.75rem] bg-[rgba(36,27,47,0.06)] p-3 font-mono text-xs leading-5 text-[var(--color-ink)]">
+                    {JSON.stringify(debugState.debugPayload, null, 2)}
+                  </pre>
+                </div>
+                <div>
+                  <p className="text-xs font-black uppercase tracking-[0.08em] text-[var(--color-muted)]">
+                    Greška
+                  </p>
+                  <p className="mt-2 break-words rounded-[0.75rem] bg-[rgba(190,38,78,0.07)] p-3 font-mono text-xs leading-5 text-[var(--color-danger)]">
+                    {debugState.safeErrorMessage}
+                  </p>
+                </div>
+              </div>
+            ) : null}
+          </div>
         ) : null}
 
         <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">

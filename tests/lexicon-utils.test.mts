@@ -20,7 +20,11 @@ import {
   hashToken as hashPepperedToken,
   verifyToken,
 } from "../lib/tokens.ts";
-import { AppValidationError, getPublicErrorMessage } from "../lib/errors.ts";
+import {
+  AppValidationError,
+  getPublicErrorMessage,
+  getSafeDebugErrorMessage,
+} from "../lib/errors.ts";
 import {
   normalizeTextInput,
   validateAnswerList,
@@ -275,6 +279,20 @@ test("public error messages hide unknown internals but keep validation copy", ()
     getPublicErrorMessage(new Error("token=secret pepper=hidden stack")),
     "Nešto je pošlo po zlu. Pokušaj ponovno.",
   );
+});
+
+test("safe debug error messages redact token and pepper details", () => {
+  const message = getSafeDebugErrorMessage(
+    new Error(
+      "TOKEN_PEPPER missing token=abc123 adminTokenHash=hidden deleteToken:secret",
+    ),
+  );
+
+  assert.match(message, /^Error:/);
+  assert.equal(message.includes("TOKEN_PEPPER"), false);
+  assert.equal(message.includes("abc123"), false);
+  assert.equal(message.includes("adminTokenHash"), false);
+  assert.equal(message.includes("secret"), false);
 });
 
 test("convex shared helpers expose safe statuses and timestamps", () => {
