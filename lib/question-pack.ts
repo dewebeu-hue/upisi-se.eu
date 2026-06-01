@@ -1,0 +1,55 @@
+export const DEFAULT_ENTRY_QUESTIONS = [
+  {
+    id: "favorite-song",
+    label: "Koja pjesma te odmah vrati u 90-e ili 2000-e?",
+    helperText: "Može biti Colonija, Magazin, Britney, Thompson, ET, bilo što.",
+    type: "shortText",
+    required: true,
+    isPrivate: false,
+    quizEligible: true,
+    maxLength: 160,
+  },
+  {
+    id: "school-memory",
+    label: "Koja ti je najdraža školska ili ekipna uspomena?",
+    helperText: "Kratko, interno i bez previše objašnjavanja.",
+    type: "longText",
+    required: true,
+    isPrivate: false,
+    quizEligible: true,
+    maxLength: 500,
+  },
+  {
+    id: "crew-role",
+    label: "Koja si bila u ekipi?",
+    helperText:
+      "Primjer: organizatorica, dramatična, tiha legenda, kraljica izlazaka...",
+    type: "shortText",
+    required: true,
+    isPrivate: false,
+    quizEligible: true,
+    maxLength: 160,
+  },
+  {
+    id: "secret-crush-initials",
+    label: "Inicijali simpatije iz škole, ako želiš 😉",
+    helperText: "Ovo pitanje je opcionalno i vidi ga samo vlasnica.",
+    type: "optionalSecret",
+    required: false,
+    isPrivate: true,
+    quizEligible: false,
+    maxLength: 40,
+  },
+  {
+    id: "message",
+    label: "Poruka za kraj",
+    helperText: "Napiši joj nešto što će joj izmamiti osmijeh.",
+    type: "longText",
+    required: true,
+    isPrivate: false,
+    quizEligible: true,
+    maxLength: 500,
+  },
+] as const;
+
+export type EntryQuestion = (typeof DEFAULT_ENTRY_QUESTIONS)[number];

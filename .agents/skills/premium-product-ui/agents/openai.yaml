@@ -1,0 +1,4 @@
+interface:
+  display_name: "Premium Product UI"
+  short_description: "Design and implement polished, usable product interfaces."
+  default_prompt: "Use this skill to design, improve, review, or implement a premium digital product UI/UX experience."

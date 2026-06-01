@@ -1,0 +1,9 @@
+export const OWNER_NAME_MAX_LENGTH = 40;
+export const LEXICON_TITLE_MAX_LENGTH = 80;
+export const DISPLAY_NAME_MAX_LENGTH = 40;
+export const SHORT_ANSWER_MAX_LENGTH = 160;
+export const LONG_ANSWER_MAX_LENGTH = 500;
+export const SLUG_MAX_LENGTH = 64;
+export const MAX_ENTRIES_PER_LEXICON = 100;
+export const MAX_ANSWERS_PER_ENTRY = 20;
+export const QUIZ_UNLOCK_ENTRY_COUNT = 5;
