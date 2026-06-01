@@ -272,7 +272,7 @@ function EntryThankYouInner({ slug }: EntryThankYouProps) {
               >
                 Podijeli na WhatsApp
               </ButtonLink>
-              <ButtonLink href={newLexiconPath()} variant="ghost">
+              <ButtonLink href={newLexiconPath()} variant="accent">
                 Napravi svoj leksikon
               </ButtonLink>
             </div>

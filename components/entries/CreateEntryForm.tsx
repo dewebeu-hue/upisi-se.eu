@@ -386,7 +386,7 @@ function CreateEntryFormInner({ slug }: CreateEntryFormProps) {
               <ButtonLink href={createdEntry.thanksPath} size="lg">
                 Nastavi
               </ButtonLink>
-              <ButtonLink href={newLexiconPath()} variant="ghost">
+              <ButtonLink href={newLexiconPath()} variant="accent">
                 Napravi svoj leksikon
               </ButtonLink>
             </div>

@@ -15,6 +15,8 @@ const variantClasses: Record<ButtonVariant, string> = {
     "gel-shimmer border-[var(--color-ink)] bg-[var(--color-primary)] text-[var(--color-ink)] hover:bg-[var(--color-gel-yellow)]",
   secondary:
     "border-[rgba(36,27,47,0.24)] bg-[var(--color-paper-strong)] text-[var(--color-ink)] hover:border-[var(--color-gel-blue)] hover:text-[var(--color-gel-blue)]",
+  accent:
+    "border-[var(--color-gel-pink)] bg-[rgba(224,68,157,0.16)] text-[var(--color-ink)] hover:border-[var(--color-gel-purple)] hover:bg-[rgba(224,68,157,0.24)] hover:text-[var(--color-ink)]",
   ghost:
     "border-transparent bg-transparent text-[var(--color-gel-blue)] shadow-none hover:bg-white/55",
   danger:

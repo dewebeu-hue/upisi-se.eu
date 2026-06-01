@@ -149,7 +149,7 @@ export function LexiconInviteView({
                   Upiši se
                 </ButtonLink>
               )}
-              <ButtonLink href={newLexiconPath()} variant="ghost">
+              <ButtonLink href={newLexiconPath()} variant="accent">
                 Napravi svoj leksikon
               </ButtonLink>
             </div>

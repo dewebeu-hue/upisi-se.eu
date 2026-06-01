@@ -10,7 +10,13 @@ export type {
   QuestionPack as QuestionPackOption,
 } from "./question-packs.ts";
 
-export const buttonVariants = ["primary", "secondary", "ghost", "danger"] as const;
+export const buttonVariants = [
+  "primary",
+  "secondary",
+  "accent",
+  "ghost",
+  "danger",
+] as const;
 export const buttonSizes = ["sm", "md", "lg"] as const;
 export const stickerVariants = ["pink", "blue", "yellow", "purple", "green"] as const;
 export const statusTones = ["neutral", "pink", "blue", "yellow", "success"] as const;
