@@ -8,7 +8,7 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const baseClasses =
-  "inline-flex min-h-11 items-center justify-center rounded-full border-2 font-black leading-none no-underline shadow-[var(--shadow-marker)] transition duration-150 ease-out focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-focus)] active:translate-x-0.5 active:translate-y-0.5 disabled:pointer-events-none disabled:translate-x-0 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-55";
+  "inline-flex min-h-11 max-w-full items-center justify-center rounded-full border-2 text-center font-black leading-tight whitespace-normal break-words no-underline shadow-[var(--shadow-marker)] transition duration-150 ease-out [overflow-wrap:anywhere] focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-focus)] active:translate-x-0.5 active:translate-y-0.5 disabled:pointer-events-none disabled:translate-x-0 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-55";
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:

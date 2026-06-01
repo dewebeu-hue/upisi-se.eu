@@ -38,6 +38,8 @@ Stranica dohvaća leksikon preko `getPublicLexiconBySlug` i prikazuje samo publi
 
 Cover theme key (`grid-notebook`, `pink-gel-pen`, `y2k-sparkle`, `spomenar`, `turbo-2002`) mijenja CoverPreview i male theme badge/accent detalje kroz invite, upis, hvala i admin flow. Ako je key star ili nepoznat, UI koristi fallback `grid-notebook`.
 
+Pozivnica prikazuje i lagani unlock progress: prvi upis, titule ekipe, dovoljan broj upisa za budući kviz i veće reunion milestoneove. To je motivacijski product state, ne stvarni kviz.
+
 Primarna akcija vodi na `/l/[slug]/upis`. Sekundarna akcija vodi na `/novi` za osobu koja želi napraviti svoj leksikon.
 
 Metadata za ovu rutu koristi samo public-safe podatke. Ako server-side Convex dohvat nije dostupan lokalno, stranica i OG ruta koriste brendirani fallback bez privatnih podataka.
@@ -73,6 +75,8 @@ Ako osoba ne potvrdi consent za budući kviz, svi odgovori se spremaju s vidljiv
 
 Nakon uspješnog spremanja CTA `Nastavi` vodi na `/l/[slug]/hvala`. Taj thank-you flow ne smije sadržavati privatni edit/delete token.
 
+Success state nakon spremanja smije prikazati zabavnu karticu `Ti si...` i CTA za vlastiti leksikon. Rezultat se smije temeljiti samo na sigurnom seedu iz upisa, bez čitanja privatnih odgovora i bez spremanja novog osjetljivog podatka.
+
 Ruta je `noindex` jer je dio interakcijskog flowa, ne javna landing stranica za tražilice.
 
 ## `/l/[slug]/hvala` thank-you stranica
@@ -83,6 +87,8 @@ Stranica ne čita `entryId`, `token`, admin token ni edit/delete token iz query 
 
 Primarna akcija vodi na `/novi` kako bi osoba mogla napraviti svoj leksikon. Sekundarne akcije smiju kopirati ili dijeliti samo javni invite link `/l/[slug]`.
 
+Stranica prikazuje viralni CTA i unlock progress prema budućem formatu `Pogodi čiji je odgovor?`, ali ne otvara stvarni kviz dok kviz logika ne postoji.
+
 Ruta je `noindex` jer je post-submit state i ne treba ulaziti u sitemap ni rezultate tražilice.
 
 ## `/admin/[lexiconId]` privatni admin pregled
@@ -90,6 +96,8 @@ Ruta je `noindex` jer je post-submit state i ne treba ulaziti u sitemap ni rezul
 Ruta `/admin/[lexiconId]` je privatna ruta za vlasnicu leksikona i zahtijeva `token` query parametar. Bez tokena ili s neispravnim tokenom prikazuje generički invalid/private-link state i ne otkriva je li problem u ID-u, tokenu ili obrisanom leksikonu.
 
 Dashboard koristi admin token provjeru preko `listEntriesForAdmin`. Prikazuje osnovne podatke leksikona, status kviza, javni invite link `/l/[slug]` i aktivne upise prijateljica.
+
+Admin prikaz smije prikazati unlock progress i zabavne titule ekipe nakon najmanje 3 aktivna upisa. Titule su determinističke i ne analiziraju privatne odgovore.
 
 Admin pregled ne prikazuje `adminTokenHash`, `deleteTokenHash`, plaintext tokene ni privatni admin link kao shareable vrijednost. Copy/share akcija u dashboardu smije kopirati samo javni invite link.
 

@@ -45,6 +45,7 @@ Ako ne koristiš dev seed, unesi testne podatke ručno:
 - Ispuni osnovna pitanja u formi.
 - Provjeri da je sekcija `Želim ispuniti još pitanja ✨` zatvorena po defaultu.
 - Pošalji upis s praznim dodatnim pitanjima i provjeri da submit nije blokiran.
+- Provjeri da success state nakon upisa prikazuje karticu `Ti si...` i CTA `Napravi svoj leksikon`.
 - U drugom prolazu otvori dodatna pitanja, popuni nekoliko optional odgovora i provjeri da se spremaju u admin pregledu.
 - Provjeri da `Tajna poruka samo za vlasnicu leksikona` ne ide u kviz i ostaje owner-only.
 - Spremi privatni link za uređivanje i brisanje upisa.
@@ -54,6 +55,8 @@ Ako ne koristiš dev seed, unesi testne podatke ručno:
 - Otvori privatni link za uređivanje i brisanje.
 - Promijeni jedan odgovor i spremi.
 - Vrati se u admin dashboard i provjeri da je izmjena vidljiva.
+- Nakon najmanje 3 aktivna upisa provjeri da admin prikazuje `Titule ekipe`.
+- Nakon 5 aktivnih upisa provjeri da progress kaže da ima dovoljno upisa za budući kviz, ali da se stvarni kviz još ne otvara.
 - Obriši upis.
 - Vrati se u admin dashboard i provjeri da upis više nije aktivan.
 - Obriši leksikon.
@@ -83,6 +86,7 @@ Ako ne koristiš dev seed, unesi testne podatke ručno:
 - `deleteTokenHash` se nikad ne prikazuje u UI-ju.
 - Javni share link ne sadrži `token`.
 - Admin dashboard kopira samo javni invite link.
+- Kartica `Ti si...`, unlock progress i `Titule ekipe` ne prikazuju admin token, edit/delete token, hash vrijednosti ni privatne linkove.
 - `/sitemap.xml` ne uključuje `/admin/`, `/e/`, `/l/[slug]`, `/l/[slug]/upis`, `/l/[slug]/hvala` ni `/api/`.
 - Privatne i flow rute imaju `noindex`.
 - Nema Google Analyticsa, Meta Pixela, tracking skripti, Stripea, autha ni uploadanja slika.

@@ -3,6 +3,7 @@
 import { useMemo, useState, type FormEvent, type ReactNode } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { ResultCard } from "@/components/gamification/ResultCard";
 import { RetroCard } from "@/components/RetroCard";
 import { hasConvexClientConfig } from "@/components/providers/ConvexClientProvider";
 import { Button } from "@/components/ui/Button";
@@ -20,6 +21,7 @@ import {
   stickerOptions,
 } from "@/lib/design";
 import { getPublicErrorMessage } from "@/lib/errors";
+import { getEntryResultTitle } from "@/lib/gamification";
 import { DISPLAY_NAME_MAX_LENGTH } from "@/lib/limits";
 import {
   getQuestionPackByKey,
@@ -41,6 +43,7 @@ type FieldErrors = {
 } & Record<string, string | undefined>;
 
 type CreatedEntry = {
+  entryId: string;
   editPath: string;
   editUrl: string;
   thanksPath: string;
@@ -182,7 +185,7 @@ function CreateEntryFormInner({ slug }: CreateEntryFormProps) {
 
   const progressLabel =
     lexicon && lexicon.quizUnlocked
-      ? "Kviz je otključan"
+      ? "Dovoljno upisa za kviz"
       : lexicon
         ? `${lexicon.entryCount}/${lexicon.quizUnlockEntryCount} upisa do kviza`
         : "Upis u tijeku";
@@ -256,6 +259,7 @@ function CreateEntryFormInner({ slug }: CreateEntryFormProps) {
         result.editPath || editEntryPath(result.entryId, result.editToken);
 
       setCreatedEntry({
+        entryId: result.entryId,
         editPath,
         editUrl: toAbsolutePath(editPath),
         thanksPath: lexiconThanksPath(result.lexiconSlug),
@@ -327,6 +331,10 @@ function CreateEntryFormInner({ slug }: CreateEntryFormProps) {
   }
 
   if (createdEntry) {
+    const entryResult = getEntryResultTitle(
+      `${createdEntry.entryId}:${displayName}:${selectedMood}:${selectedSticker}`,
+    );
+
     return (
       <EntryShell>
         <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
@@ -348,6 +356,17 @@ function CreateEntryFormInner({ slug }: CreateEntryFormProps) {
                 link ispod ako želiš kasnije urediti ili obrisati svoj upis.
               </p>
             </div>
+
+            <ResultCard
+              action={
+                <ButtonLink href={newLexiconPath()} variant="accent">
+                  Napravi svoj leksikon
+                </ButtonLink>
+              }
+              description={entryResult.description}
+              emoji={entryResult.emoji}
+              title={entryResult.title}
+            />
 
             <div className="rounded-[1rem] border border-[rgba(36,27,47,0.12)] bg-white/62 p-4">
               <label className="form-label" htmlFor="edit-link">
@@ -395,7 +414,7 @@ function CreateEntryFormInner({ slug }: CreateEntryFormProps) {
               className={createdEntry.quizUnlocked ? "glitter-border" : undefined}
               label={
                 createdEntry.quizUnlocked
-                  ? "Kviz je otključan"
+                  ? "Dovoljno upisa za kviz"
                   : `${createdEntry.entryCount}/${createdEntry.quizUnlockEntryCount} upisa do kviza`
               }
               tone={createdEntry.quizUnlocked ? "success" : "yellow"}

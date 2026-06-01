@@ -26,21 +26,25 @@ export function CoverPreview({
   return (
     <div
       className={cn(
-        "cover-preview relative mx-auto w-full max-w-sm rounded-[1.65rem] border-2 p-4",
+        "cover-preview relative mx-auto w-full max-w-sm min-w-0 overflow-hidden rounded-[1.65rem] border-2 p-3 sm:p-4",
         themeOption.coverClassName,
         className,
       )}
     >
       <Tape className="-top-3 left-1/2 -translate-x-1/2" rotate="right" />
-      <div className="cover-preview__page relative overflow-hidden rounded-[1.25rem] border p-5">
+      <div className="cover-preview__page relative min-w-0 overflow-hidden rounded-[1.25rem] border p-4 sm:p-5">
         <div className="cover-preview__corner-stickers" aria-hidden="true">
           <span>{decorativeStickers[0]}</span>
           <span>{decorativeStickers[1]}</span>
           <span>{decorativeStickers[2]}</span>
         </div>
         <div className="cover-preview__shine" aria-hidden="true" />
-        <div className="relative z-[1] flex items-center justify-between gap-3">
-          <ProgressPill label={themeOption.label} tone={themeOption.tone} />
+        <div className="relative z-[1] flex min-w-0 flex-wrap items-center justify-between gap-2 sm:gap-3">
+          <ProgressPill
+            className="min-w-0"
+            label={themeOption.label}
+            tone={themeOption.tone}
+          />
           <Sticker className="rotate-6" variant="pink">
             {displaySticker}
           </Sticker>
@@ -49,10 +53,10 @@ export function CoverPreview({
           <p className="cover-preview__eyebrow text-sm font-black uppercase tracking-[0.16em]">
             Upiši se
           </p>
-          <h3 className="mt-3 break-words text-4xl font-black leading-[0.98] text-[var(--color-ink)]">
+          <h3 className="mt-3 max-w-full break-words text-3xl font-black leading-tight text-[var(--color-ink)] [overflow-wrap:anywhere] sm:text-4xl">
             {title}
           </h3>
-          <p className="cover-preview__owner mt-5 inline-flex rounded-full px-3 py-1 text-sm font-bold">
+          <p className="cover-preview__owner mt-5 inline-flex max-w-full rounded-full px-3 py-1 text-sm font-bold leading-snug whitespace-normal break-words [overflow-wrap:anywhere]">
             vlasnica: {ownerName}
           </p>
         </div>

@@ -4,6 +4,8 @@ import { Component, useMemo, useState, type ReactNode } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
+import { TeamSuperlatives } from "@/components/gamification/TeamSuperlatives";
+import { UnlockProgress } from "@/components/gamification/UnlockProgress";
 import { hasConvexClientConfig } from "@/components/providers/ConvexClientProvider";
 import { RetroCard } from "@/components/RetroCard";
 import { Button } from "@/components/ui/Button";
@@ -198,7 +200,7 @@ function AdminDashboardWithConvex({ lexiconId, token }: AdminDashboardProps) {
   const adminToken = normalizedToken;
   const coverTheme = getCoverThemeByValues(lexicon.coverStyle, lexicon.theme);
   const progressLabel = lexicon.quizUnlocked
-    ? "Kviz je otključan"
+    ? "Dovoljno upisa za kviz"
     : `${lexicon.entryCount}/${lexicon.quizUnlockEntryCount} upisa do kviza`;
 
   async function handleCopyInviteLink() {
@@ -295,10 +297,16 @@ function AdminDashboardWithConvex({ lexiconId, token }: AdminDashboardProps) {
                 Kviz
               </p>
               <p className="mt-2 text-lg font-black text-[var(--color-ink)]">
-                {lexicon.quizUnlocked ? "Otključan" : "U pripremi"}
+                {lexicon.quizUnlocked ? "Spremno" : "U pripremi"}
               </p>
             </RetroCard>
           </section>
+
+          <UnlockProgress
+            entryCount={lexicon.entryCount}
+            quizUnlocked={lexicon.quizUnlocked}
+            quizUnlockEntryCount={lexicon.quizUnlockEntryCount}
+          />
 
           <section
             className={`space-y-5 rounded-[1.25rem] border p-5 shadow-[var(--shadow-soft)] ${coverTheme.accentClassName}`}
@@ -348,6 +356,8 @@ function AdminDashboardWithConvex({ lexiconId, token }: AdminDashboardProps) {
               </p>
             ) : null}
           </section>
+
+          <TeamSuperlatives entries={entries} />
 
           <section className="space-y-5">
             <div>

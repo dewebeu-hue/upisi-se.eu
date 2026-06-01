@@ -86,12 +86,12 @@ function PublicLexiconInviteInner({ slug }: PublicLexiconInviteProps) {
   if (lexicon === undefined) {
     return (
       <InviteShell>
-        <div className="rounded-[1.25rem] border border-[rgba(36,27,47,0.12)] bg-white/62 p-5 shadow-[var(--shadow-soft)]">
+        <div className="min-w-0 overflow-hidden rounded-[1.25rem] border border-[rgba(36,27,47,0.12)] bg-white/62 p-4 shadow-[var(--shadow-soft)] sm:p-5">
           <ProgressPill label="Otvaram leksikon..." tone="yellow" />
-          <h1 className="mt-4 text-3xl font-black text-[var(--color-ink)]">
+          <h1 className="mt-4 break-words text-3xl font-black text-[var(--color-ink)] [overflow-wrap:anywhere]">
             Listam stranice bilježnice.
           </h1>
-          <p className="mt-3 text-sm leading-6 text-[var(--color-muted)]">
+          <p className="mt-3 break-words text-sm leading-6 text-[var(--color-muted)] [overflow-wrap:anywhere]">
             Pozivnica se sprema za čitanje, naljepnice i prvi klik na upis.
           </p>
         </div>

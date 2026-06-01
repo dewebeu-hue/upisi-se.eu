@@ -3,6 +3,7 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { UnlockProgress } from "@/components/gamification/UnlockProgress";
 import { hasConvexClientConfig } from "@/components/providers/ConvexClientProvider";
 import { Button } from "@/components/ui/Button";
 import { ButtonLink } from "@/components/ui/ButtonLink";
@@ -109,7 +110,7 @@ function EntryThankYouInner({ slug }: EntryThankYouProps) {
 
   const coverTheme = getCoverThemeByValues(lexicon.coverStyle, lexicon.theme);
   const progressLabel = lexicon.quizUnlocked
-    ? "Kviz je otključan"
+    ? "Dovoljno upisa za kviz"
     : `${lexicon.entryCount}/${lexicon.quizUnlockEntryCount} upisa do kviza`;
   const remainingEntries = Math.max(
     lexicon.quizUnlockEntryCount - lexicon.entryCount,
@@ -175,12 +176,11 @@ function EntryThankYouInner({ slug }: EntryThankYouProps) {
                 Sljedeći korak
               </p>
               <h1 className="mt-3 text-3xl font-black text-[var(--color-ink)]">
-                Sad je tvoj red za leksikon.
+                Napravi svoj leksikon i vidi što će tvoja ekipa napisati o tebi.
               </h1>
               <p className="mt-3 text-sm leading-6 text-[var(--color-muted)]">
-                Napravi svoj digitalni leksikon, pošalji link u WhatsApp ili
-                Viber grupu i čekaj odgovore zbog kojih se opet smijete istim
-                forama.
+                Pošalji link u WhatsApp ili Viber grupu i skupljaj stranice.
+                Još malo i ima dovoljno materijala za igru “Pogodi čiji je odgovor?”.
               </p>
             </div>
 
@@ -204,20 +204,26 @@ function EntryThankYouInner({ slug }: EntryThankYouProps) {
             ) : null}
           </section>
 
+          <UnlockProgress
+            entryCount={lexicon.entryCount}
+            quizUnlocked={lexicon.quizUnlocked}
+            quizUnlockEntryCount={lexicon.quizUnlockEntryCount}
+          />
+
           <section className="grid gap-4 md:grid-cols-[0.95fr_1.05fr]">
             <div className="rounded-[1.25rem] border border-[rgba(36,27,47,0.12)] bg-white/64 p-5 shadow-[var(--shadow-soft)]">
               <ProgressPill
                 className={lexicon.quizUnlocked ? "glitter-border" : undefined}
-                label={lexicon.quizUnlocked ? "Kviz je otključan" : "Još malo do kviza"}
+                label={lexicon.quizUnlocked ? "Dovoljno upisa za kviz" : "Još malo do kviza"}
                 tone={lexicon.quizUnlocked ? "success" : "yellow"}
               />
               <h2 className="mt-4 text-2xl font-black text-[var(--color-ink)]">
-                {lexicon.quizUnlocked ? "Kviz je otključan 🎉" : "Još malo do kviza"}
+                {lexicon.quizUnlocked ? "Dovoljno upisa za kviz 🎉" : "Još malo do kviza"}
               </h2>
               <p className="mt-3 text-sm leading-6 text-[var(--color-muted)]">
                 {lexicon.quizUnlocked
-                  ? "Ekipa je skupila dovoljno upisa za budući kviz. Logika kviza dolazi u sljedećim koracima MVP-a."
-                  : `Kad se skupi ${lexicon.quizUnlockEntryCount} upisa, ovdje će se moći otvoriti kviz "Pogodi čiji je odgovor?". Još ${remainingEntries} do tog trenutka.`}
+                  ? "Ekipa je skupila dovoljno upisa za budući kviz. Prava igra dolazi u sljedećoj fazi."
+                  : `Kad se skupi ${lexicon.quizUnlockEntryCount} upisa, bit će dovoljno odgovora za igru "Pogodi čiji je odgovor?". Još ${remainingEntries} do tog trenutka.`}
               </p>
               <ProgressPill
                 className={lexicon.quizUnlocked ? "mt-4 glitter-border" : "mt-4"}
@@ -227,7 +233,7 @@ function EntryThankYouInner({ slug }: EntryThankYouProps) {
             </div>
 
             <SharePreviewCard
-              description={`Ja sam se upravo upisala u ${lexicon.ownerName} leksikon. Upiši se i ti kao nekad u osnovnoj.`}
+              description={`Ja sam se upravo upisala u ${lexicon.ownerName} leksikon. Još malo i otključava se igra “Pogodi čiji je odgovor?”.`}
               title={`Pozivnica: ${lexicon.title}`}
               urlLabel={publicInviteUrl}
             />

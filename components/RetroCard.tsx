@@ -25,7 +25,7 @@ export function RetroCard({
   return (
     <div
       className={cn(
-        "relative rounded-[1.35rem] sm:rounded-[1.6rem]",
+        "relative w-full max-w-full min-w-0 overflow-hidden rounded-[1.35rem] sm:rounded-[1.6rem]",
         variantClasses[variant],
         className,
       )}

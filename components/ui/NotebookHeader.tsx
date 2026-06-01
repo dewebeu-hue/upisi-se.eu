@@ -14,15 +14,15 @@ export function NotebookHeader({
   sticker,
 }: NotebookHeaderProps) {
   return (
-    <div className="relative">
-      <div className="flex items-start justify-between gap-4">
+    <div className="relative min-w-0 max-w-full overflow-hidden">
+      <div className="flex min-w-0 items-start justify-between gap-3 sm:gap-4">
         <div className="min-w-0">
           {eyebrow ? (
-            <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--color-gel-pink)]">
+            <p className="max-w-full break-words text-xs font-black uppercase leading-snug tracking-[0.12em] text-[var(--color-gel-pink)] [overflow-wrap:anywhere] sm:tracking-[0.16em]">
               {eyebrow}
             </p>
           ) : null}
-          <h1 className="mt-3 text-balance text-4xl font-black leading-[0.98] text-[var(--color-ink)] sm:text-5xl">
+          <h1 className="mt-3 max-w-full break-words text-3xl font-black leading-tight text-[var(--color-ink)] [overflow-wrap:anywhere] sm:text-balance sm:text-5xl sm:leading-[0.98]">
             {title}
           </h1>
         </div>
@@ -33,7 +33,7 @@ export function NotebookHeader({
         ) : null}
       </div>
       {description ? (
-        <p className="mt-5 max-w-2xl text-pretty text-base leading-7 text-[var(--color-muted)] sm:text-lg">
+        <p className="mt-5 max-w-2xl break-words text-base leading-7 text-[var(--color-muted)] [overflow-wrap:anywhere] sm:text-pretty sm:text-lg">
           {description}
         </p>
       ) : null}

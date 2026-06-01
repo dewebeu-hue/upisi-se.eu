@@ -46,6 +46,12 @@ import {
   questionPackOptions,
 } from "../lib/question-packs.ts";
 import {
+  TEAM_SUPERLATIVES_UNLOCK_COUNT,
+  getEntryResultTitle,
+  getTeamSuperlatives,
+  getUnlockMilestones,
+} from "../lib/gamification.ts";
+import {
   ACTIVE_STATUS,
   DELETED_STATUS,
   createDeletedTimestamp,
@@ -290,6 +296,54 @@ test("question packs expose distinct entry questions with a safe fallback", () =
   assert.match(reunion.baseQuestions[0].label, /danas/);
   assert.match(djevojacka.baseQuestions[0].label, /uspomena s njom/);
   assert.notEqual(osnovna.baseQuestions[0].id, srednja.baseQuestions[0].id);
+});
+
+test("entry result titles are deterministic and public-safe", () => {
+  const first = getEntryResultTitle("entry-1:maja:nostalgic:star");
+  const second = getEntryResultTitle("entry-1:maja:nostalgic:star");
+
+  assert.deepEqual(first, second);
+  assert.equal(typeof first.title, "string");
+  assert.equal(typeof first.description, "string");
+  assert.equal(typeof first.emoji, "string");
+  assert.ok(first.title.length > 0);
+});
+
+test("unlock milestones expose team titles before quiz-ready state", () => {
+  const threeEntries = getUnlockMilestones(3, 5);
+  const fiveEntries = getUnlockMilestones(5, 5);
+
+  assert.equal(
+    threeEntries.find((milestone) => milestone.key === "team-titles")
+      ?.unlocked,
+    true,
+  );
+  assert.equal(
+    threeEntries.find((milestone) => milestone.key === "quiz-ready")
+      ?.unlocked,
+    false,
+  );
+  assert.equal(
+    fiveEntries.find((milestone) => milestone.key === "quiz-ready")?.unlocked,
+    true,
+  );
+});
+
+test("team superlatives stay locked until enough entries and are deterministic", () => {
+  const tooFewEntries = [
+    { _id: "entry-1", displayName: "Maja", createdAt: 1 },
+    { _id: "entry-2", displayName: "Ana", createdAt: 2 },
+  ];
+  const enoughEntries = [
+    ...tooFewEntries,
+    { _id: "entry-3", displayName: "Ivana", createdAt: 3 },
+  ];
+
+  assert.equal(TEAM_SUPERLATIVES_UNLOCK_COUNT, 3);
+  assert.deepEqual(getTeamSuperlatives(tooFewEntries), []);
+  assert.deepEqual(getTeamSuperlatives(enoughEntries), getTeamSuperlatives(enoughEntries));
+  assert.ok(getTeamSuperlatives(enoughEntries).length > 0);
+  assert.equal(getTeamSuperlatives(enoughEntries)[0]?.displayName, "Maja");
 });
 
 test("public error messages hide unknown internals but keep validation copy", () => {

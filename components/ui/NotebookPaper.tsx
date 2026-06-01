@@ -21,13 +21,13 @@ export function NotebookPaper({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-[1.25rem] border border-[rgba(36,27,47,0.14)] px-5 py-6 shadow-[var(--shadow-paper)] sm:rounded-[1.75rem] sm:px-7 sm:py-8",
+        "relative w-full max-w-full min-w-0 overflow-hidden rounded-[1.25rem] border border-[rgba(36,27,47,0.14)] px-4 py-6 shadow-[var(--shadow-paper)] sm:rounded-[1.75rem] sm:px-7 sm:py-8",
         "before:absolute before:inset-y-0 before:left-7 before:w-px before:bg-[rgba(224,68,157,0.28)] before:content-[''] sm:before:left-10",
         variantClasses[variant],
         className,
       )}
     >
-      <div className="relative">{children}</div>
+      <div className="relative min-w-0 max-w-full">{children}</div>
     </div>
   );
 }

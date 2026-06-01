@@ -23,7 +23,7 @@ export function ProgressPill({
   return (
     <span
       className={cn(
-        "inline-flex min-h-8 max-w-full items-center rounded-full border px-3 py-1 text-xs font-black uppercase tracking-[0.12em]",
+        "inline-flex min-h-8 max-w-full min-w-0 items-center rounded-full border px-3 py-1 text-left text-xs font-black uppercase leading-snug tracking-[0.08em] whitespace-normal break-words [overflow-wrap:anywhere] sm:tracking-[0.12em]",
         toneClasses[tone],
         className,
       )}

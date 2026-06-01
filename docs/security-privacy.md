@@ -162,6 +162,16 @@ Globalni metadata i OG previewi smiju koristiti samo javno sigurne podatke. Javn
 
 OG image rute koriste CSS, tekst i emoji bez vanjskih slika ili fontova. Ako Convex metadata dohvat nije dostupan lokalno, OG ruta vraća sigurni brendirani fallback bez privatnih podataka.
 
+## Gamification Faza 1
+
+Gamification u MVP-u smije motivirati korisnice kroz rezultat `Ti si...`, unlock progress i `Titule ekipe`, ali ne smije analizirati privatne odgovore ni stvarati javni prikaz upisa.
+
+Rezultat nakon upisa računa se iz sigurnog seeda vezanog uz sam upis i UI odabire. Ne sprema se kao osjetljiv podatak, ne koristi `adminToken`, `deleteToken`, hash vrijednosti, pepper ni privatne odgovore.
+
+`Titule ekipe` u adminu rade samo nad aktivnim upisima i koriste javno prikazivo ime/nadimak, ID i redoslijed. Privatni odgovori, owner-only odgovori i secret pitanja ne smiju ulaziti u izračun titula.
+
+Share copy u gamified flowu smije sadržavati samo javni invite link. Ne smije sadržavati admin link, edit/delete link, token query parametre, hash vrijednosti ni sadržaj privatnih odgovora.
+
 ## MVP privacy checklist
 
 - Nema Google Analyticsa, Meta Pixela ni vanjskog trackinga.

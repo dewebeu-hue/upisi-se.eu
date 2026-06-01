@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, type ReactNode } from "react";
+import { UnlockProgress } from "@/components/gamification/UnlockProgress";
 import { Button } from "@/components/ui/Button";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { CoverPreview } from "@/components/ui/CoverPreview";
@@ -44,8 +45,8 @@ const whatsAppButtonClassName =
 
 export function InviteShell({ children }: { children: ReactNode }) {
   return (
-    <section className="mx-auto w-full max-w-6xl px-5 py-10 sm:px-8 sm:py-16">
-      <NotebookPaper className="w-full" variant="grid">
+    <section className="mx-auto w-full max-w-6xl overflow-x-hidden px-4 py-8 sm:px-8 sm:py-16">
+      <NotebookPaper className="w-full max-w-full min-w-0" variant="grid">
         {children}
       </NotebookPaper>
     </section>
@@ -67,7 +68,7 @@ export function LexiconInviteView({
   );
   const entryPath = lexiconEntryPath(lexicon.slug);
   const entryCountLabel = lexicon.quizUnlocked
-    ? "Kviz je otključan"
+    ? "Dovoljno upisa za kviz"
     : `${lexicon.entryCount}/${lexicon.quizUnlockEntryCount} upisa do kviza`;
   const coverTheme = getCoverThemeByValues(lexicon.coverStyle, lexicon.theme);
   const shareText = createInviteShareText(lexicon.ownerName, inviteUrl);
@@ -96,8 +97,8 @@ export function LexiconInviteView({
 
   return (
     <InviteShell>
-      <div className="grid gap-7 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
-        <div className="space-y-6">
+      <div className="grid min-w-0 gap-7 overflow-hidden lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-start">
+        <div className="min-w-0 space-y-6">
           <NotebookHeader
             description={
               isDemo
@@ -109,7 +110,7 @@ export function LexiconInviteView({
             title={`${lexicon.ownerName} te zove da se upišeš ✨`}
           />
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex min-w-0 flex-wrap gap-2">
             {isDemo ? (
               <ProgressPill label="Ovo je samo primjer pozivnice" tone="blue" />
             ) : null}
@@ -126,41 +127,52 @@ export function LexiconInviteView({
           </div>
 
           <div
-            className={`rounded-[1.25rem] border p-5 shadow-[var(--shadow-soft)] ${coverTheme.accentClassName}`}
+            className={`min-w-0 overflow-hidden rounded-[1.25rem] border p-4 shadow-[var(--shadow-soft)] sm:p-5 ${coverTheme.accentClassName}`}
           >
-            <p className="text-sm font-black uppercase tracking-[0.14em] text-[var(--color-gel-pink)]">
+            <p className="break-words text-sm font-black uppercase tracking-[0.12em] text-[var(--color-gel-pink)] [overflow-wrap:anywhere] sm:tracking-[0.14em]">
               Tvoj sljedeći korak
             </p>
-            <h2 className="mt-3 text-2xl font-black text-[var(--color-ink)]">
+            <h2 className="mt-3 break-words text-2xl font-black text-[var(--color-ink)] [overflow-wrap:anywhere]">
               Upiši se u “{lexicon.title}”
             </h2>
-            <p className="mt-3 text-sm leading-6 text-[var(--color-muted)]">
+            <p className="mt-3 break-words text-sm leading-6 text-[var(--color-muted)] [overflow-wrap:anywhere]">
               {isDemo
                 ? "U pravom leksikonu ovaj gumb vodi na formu za upis. Ovdje je demo siguran i ne sprema podatke."
                 : "Vlasnica će tvoje odgovore vidjeti preko privatnog linka. Nema registracije i nema javnog popisa odgovora."}
             </p>
-            <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+            <div className="mt-5 flex min-w-0 flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
               {isDemo ? (
-                <Button disabled size="lg" type="button">
+                <Button className="w-full sm:w-auto" disabled size="lg" type="button">
                   Ovdje bi se upisala
                 </Button>
               ) : (
-                <ButtonLink href={entryPath} size="lg">
+                <ButtonLink className="w-full sm:w-auto" href={entryPath} size="lg">
                   Upiši se
                 </ButtonLink>
               )}
-              <ButtonLink href={newLexiconPath()} variant="accent">
+              <ButtonLink
+                className="w-full sm:w-auto"
+                href={newLexiconPath()}
+                variant="accent"
+              >
                 Napravi svoj leksikon
               </ButtonLink>
             </div>
           </div>
 
-          <div className="space-y-4 rounded-[1.25rem] border border-[rgba(36,27,47,0.12)] bg-white/58 p-5">
+          <UnlockProgress
+            compact
+            entryCount={lexicon.entryCount}
+            quizUnlocked={lexicon.quizUnlocked}
+            quizUnlockEntryCount={lexicon.quizUnlockEntryCount}
+          />
+
+          <div className="min-w-0 space-y-4 overflow-hidden rounded-[1.25rem] border border-[rgba(36,27,47,0.12)] bg-white/58 p-4 sm:p-5">
             <div>
-              <p className="text-sm font-black text-[var(--color-ink)]">
+              <p className="break-words text-sm font-black text-[var(--color-ink)] [overflow-wrap:anywhere]">
                 Pošalji link još nekome
               </p>
-              <p className="mt-1 text-sm leading-6 text-[var(--color-muted)]">
+              <p className="mt-1 break-words text-sm leading-6 text-[var(--color-muted)] [overflow-wrap:anywhere]">
                 {isDemo
                   ? "Ovaj demo link ne sadrži privatne tokene i ne sprema podatke."
                   : "Share je javan i ne sadrži privatni link za pregled ni privatni token."}
@@ -171,14 +183,19 @@ export function LexiconInviteView({
               title={`Pozivnica: ${lexicon.title}`}
               urlLabel={inviteUrl}
             />
-            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Button onClick={handleCopyLink} type="button" variant="secondary">
+            <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <Button
+                className="w-full sm:w-auto"
+                onClick={handleCopyLink}
+                type="button"
+                variant="secondary"
+              >
                 {copyMessage === "Link je kopiran!"
                   ? "Link je kopiran!"
                   : "Kopiraj link"}
               </Button>
               <ButtonLink
-                className={whatsAppButtonClassName}
+                className={`w-full sm:w-auto ${whatsAppButtonClassName}`}
                 href={whatsAppUrl}
                 rel="noopener noreferrer"
                 target="_blank"
@@ -195,18 +212,18 @@ export function LexiconInviteView({
           </div>
         </div>
 
-        <div className="space-y-4 lg:sticky lg:top-6">
+        <div className="min-w-0 space-y-4 lg:sticky lg:top-6">
           <CoverPreview
             ownerName={lexicon.ownerName}
             sticker={coverTheme.sticker}
             theme={coverTheme.key}
             title={lexicon.title}
           />
-          <div className="rounded-[1.1rem] border border-[rgba(36,27,47,0.12)] bg-white/60 p-4">
-            <p className="text-sm font-black text-[var(--color-ink)]">
+          <div className="min-w-0 overflow-hidden rounded-[1.1rem] border border-[rgba(36,27,47,0.12)] bg-white/60 p-4">
+            <p className="break-words text-sm font-black text-[var(--color-ink)] [overflow-wrap:anywhere]">
               Malo povjerenja prije upisa
             </p>
-            <p className="mt-2 text-sm leading-6 text-[var(--color-muted)]">
+            <p className="mt-2 break-words text-sm leading-6 text-[var(--color-muted)] [overflow-wrap:anywhere]">
               {isDemo
                 ? "Demo pozivnica ne čita Convex i ne prikazuje stvarne upise."
                 : "Odgovore će vidjeti vlasnica leksikona preko privatnog linka. Ova javna stranica ne prikazuje upise."}
