@@ -27,6 +27,8 @@ type EntryThankYouProps = {
 };
 
 const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+const whatsAppButtonClassName =
+  "border-[#128c7e] bg-[#25d366] text-[#0b2d20] shadow-[4px_5px_0_#0b2d20] hover:border-[#075e54] hover:bg-[#1ebe5d] hover:text-[#06281e] focus-visible:outline-[#25d366]";
 
 function ThankYouShell({ children }: { children: ReactNode }) {
   return (
@@ -262,6 +264,7 @@ function EntryThankYouInner({ slug }: EntryThankYouProps) {
             </div>
             <div className="flex flex-col gap-3">
               <ButtonLink
+                className={whatsAppButtonClassName}
                 href={whatsAppUrl}
                 rel="noopener noreferrer"
                 target="_blank"
