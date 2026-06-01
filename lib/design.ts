@@ -39,10 +39,12 @@ export type CoverThemeOption = {
   key: CoverThemeKey;
   legacyKeys: readonly string[];
   label: string;
+  shortLabel: string;
   name: string;
   emoji: string;
   description: string;
   paperVariant: CoverPaperVariant;
+  paperClassName: string;
   accent: "blue" | "pink" | "purple" | "yellow" | "green";
   tone: StatusTone;
   sticker: string;
@@ -55,11 +57,13 @@ export const coverThemeOptions = [
   {
     key: "grid-notebook",
     legacyKeys: ["biljeznica-na-kockice"],
+    shortLabel: "Kockice",
     label: "Bilježnica na kockice",
     name: "Bilježnica na kockice",
     emoji: "📓",
     description: "Klasični školski leksikon s urednim kockicama.",
     paperVariant: "grid",
+    paperClassName: "notebook-grid",
     accent: "blue",
     tone: "blue",
     sticker: "📓",
@@ -71,11 +75,13 @@ export const coverThemeOptions = [
   {
     key: "pink-gel-pen",
     legacyKeys: ["rozi-gel-pen"],
+    shortLabel: "Rozi gel",
     label: "Rozi gel pen",
     name: "Rozi gel pen",
     emoji: "💖",
     description: "Rozi gel-pen sjaj, srce i mekši Y2K moment.",
     paperVariant: "lined",
+    paperClassName: "notebook-lined",
     accent: "pink",
     tone: "pink",
     sticker: "💖",
@@ -87,11 +93,13 @@ export const coverThemeOptions = [
   {
     key: "y2k-sparkle",
     legacyKeys: ["y2k-sljokice"],
+    shortLabel: "Y2K",
     label: "Y2K šljokice",
     name: "Y2K šljokice",
     emoji: "💿",
     description: "Ljubičasti sparkle, CD naljepnice i malo više showa.",
     paperVariant: "plain",
+    paperClassName: "bg-[var(--color-paper)]",
     accent: "purple",
     tone: "pink",
     sticker: "💿",
@@ -103,11 +111,13 @@ export const coverThemeOptions = [
   {
     key: "spomenar",
     legacyKeys: [],
+    shortLabel: "Spomenar",
     label: "Spomenar",
     name: "Spomenar",
     emoji: "🦋",
     description: "Pastelni papir, selotejp detalji i nježniji spomenar ton.",
     paperVariant: "lined",
+    paperClassName: "notebook-lined",
     accent: "green",
     tone: "success",
     sticker: "🦋",
@@ -119,11 +129,13 @@ export const coverThemeOptions = [
   {
     key: "turbo-2002",
     legacyKeys: [],
+    shortLabel: "Turbo 2002",
     label: "Turbo 2002",
     name: "Turbo 2002",
     emoji: "😎",
     description: "Glasniji party cover za najživlje WhatsApp grupe.",
     paperVariant: "grid",
+    paperClassName: "notebook-grid",
     accent: "yellow",
     tone: "yellow",
     sticker: "😎",

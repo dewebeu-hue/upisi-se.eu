@@ -157,7 +157,7 @@ function EntryThankYouInner({ slug }: EntryThankYouProps) {
           <div className="flex flex-wrap gap-2">
             <ProgressPill label="Bez registracije" tone="blue" />
             <ProgressPill
-              label={`Tema: ${coverTheme.label}`}
+              label={`Tema: ${coverTheme.shortLabel}`}
               tone={coverTheme.tone}
             />
             <ProgressPill

@@ -270,6 +270,8 @@ test("cover and question pack validators normalize labels and legacy keys", () =
   assert.equal(getCanonicalCoverThemeKey("Turbo 2002"), "turbo-2002");
   assert.equal(getCanonicalCoverThemeKey("rozi-gel-pen"), "pink-gel-pen");
   assert.equal(getCoverThemeByKey("unknown-theme").key, "grid-notebook");
+  assert.equal(getCoverThemeByKey("turbo-2002").shortLabel, "Turbo 2002");
+  assert.equal(getCoverThemeByKey("grid-notebook").paperClassName, "notebook-grid");
   assert.equal(getCoverThemeByValues("unknown-theme", "spomenar").key, "spomenar");
   assert.equal(validateThemeKey("Y2K šljokice"), "y2k-sparkle");
   assert.equal(validateQuestionPackKey("osnovna-1998"), "osnovna-1998");
@@ -309,15 +311,15 @@ test("entry result titles are deterministic and public-safe", () => {
   assert.ok(first.title.length > 0);
 });
 
-test("unlock milestones expose team titles before quiz-ready state", () => {
+test("unlock milestones expose first internal jokes before quiz-ready state", () => {
   const threeEntries = getUnlockMilestones(3, 5);
   const fiveEntries = getUnlockMilestones(5, 5);
-
-  assert.equal(
-    threeEntries.find((milestone) => milestone.key === "team-titles")
-      ?.unlocked,
-    true,
+  const teamMilestone = threeEntries.find(
+    (milestone) => milestone.key === "team-titles",
   );
+
+  assert.equal(teamMilestone?.unlocked, true);
+  assert.equal(teamMilestone?.label, "Prve interne fore");
   assert.equal(
     threeEntries.find((milestone) => milestone.key === "quiz-ready")
       ?.unlocked,

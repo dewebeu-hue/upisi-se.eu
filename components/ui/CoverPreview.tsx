@@ -42,7 +42,7 @@ export function CoverPreview({
         <div className="relative z-[1] flex min-w-0 flex-wrap items-center justify-between gap-2 sm:gap-3">
           <ProgressPill
             className="min-w-0"
-            label={themeOption.label}
+            label={themeOption.shortLabel}
             tone={themeOption.tone}
           />
           <Sticker className="rotate-6" variant="pink">

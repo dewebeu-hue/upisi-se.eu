@@ -265,7 +265,7 @@ function AdminDashboardWithConvex({ lexiconId, token }: AdminDashboardProps) {
           <div className="flex flex-wrap gap-2">
             <ProgressPill label="Privatni link za pregled" tone="blue" />
             <ProgressPill
-              label={`Tema: ${coverTheme.label}`}
+              label={`Tema: ${coverTheme.shortLabel}`}
               tone={coverTheme.tone}
             />
             <ProgressPill

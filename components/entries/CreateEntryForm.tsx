@@ -445,7 +445,7 @@ function CreateEntryFormInner({ slug }: CreateEntryFormProps) {
                 tone={lexicon.quizUnlocked ? "success" : "yellow"}
               />
               <ProgressPill
-                label={`Tema: ${coverTheme.label}`}
+                label={`Tema: ${coverTheme.shortLabel}`}
                 tone={coverTheme.tone}
               />
             </div>

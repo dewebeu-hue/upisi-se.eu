@@ -167,8 +167,8 @@ export function getUnlockMilestones(
     },
     {
       key: "team-titles",
-      label: "Titule ekipe",
-      description: "Na 3 upisa otključavaju se prve zabavne titule u adminu.",
+      label: "Prve interne fore",
+      description: "Na 3 upisa leksikon već ima dovoljno energije za prve titule ekipe u adminu.",
       requiredCount: TEAM_SUPERLATIVES_UNLOCK_COUNT,
     },
     {
@@ -179,8 +179,8 @@ export function getUnlockMilestones(
     },
     {
       key: "bigger-titles",
-      label: "Veći set titula",
-      description: "Više upisa znači više materijala za superlative ekipe.",
+      label: "Titule ekipe+",
+      description: "Na 8 upisa superlativi imaju više materijala i cijeli leksikon djeluje kao prava igra.",
       requiredCount: 8,
     },
     {

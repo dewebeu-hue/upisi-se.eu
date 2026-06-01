@@ -33,7 +33,7 @@ export function ResultCard({
       <div className="relative z-[1] flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
           <p className="text-sm font-black uppercase tracking-[0.14em] text-[var(--color-gel-pink)]">
-            Ti si...
+            U ovom leksikonu ti si ispala
           </p>
           <h2 className="mt-2 break-words text-3xl font-black leading-tight text-[var(--color-ink)]">
             {title}

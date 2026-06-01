@@ -120,7 +120,7 @@ export function LexiconInviteView({
               tone={lexicon.quizUnlocked ? "success" : "yellow"}
             />
             <ProgressPill
-              label={`Tema: ${coverTheme.label}`}
+              label={`Tema: ${coverTheme.shortLabel}`}
               tone={coverTheme.tone}
             />
             <ProgressPill label="Nema registracije" tone="blue" />

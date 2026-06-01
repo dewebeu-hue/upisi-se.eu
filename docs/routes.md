@@ -36,9 +36,9 @@ Ruta `/l/[slug]` je javna i koristi slug kao čitljiv dio linka koji se dijeli u
 
 Stranica dohvaća leksikon preko `getPublicLexiconBySlug` i prikazuje samo public-safe podatke: naslov, vlasnicu, temu/korice, broj upisa i status kviza. Ne prikazuje `adminToken`, `adminTokenHash`, privatni admin link, edit/delete tokene ni same upise.
 
-Cover theme key (`grid-notebook`, `pink-gel-pen`, `y2k-sparkle`, `spomenar`, `turbo-2002`) mijenja CoverPreview i male theme badge/accent detalje kroz invite, upis, hvala i admin flow. Ako je key star ili nepoznat, UI koristi fallback `grid-notebook`.
+Cover theme key (`grid-notebook`, `pink-gel-pen`, `y2k-sparkle`, `spomenar`, `turbo-2002`) mijenja CoverPreview i male theme badge/accent detalje kroz invite, upis, hvala i admin flow. UI smije koristiti kraći `shortLabel` u uskim badgeovima na mobitelu, ali spremljeni podaci uvijek ostaju stabilni keyjevi. Ako je key star ili nepoznat, UI koristi fallback `grid-notebook`.
 
-Pozivnica prikazuje i lagani unlock progress: prvi upis, titule ekipe, dovoljan broj upisa za budući kviz i veće reunion milestoneove. To je motivacijski product state, ne stvarni kviz.
+Pozivnica prikazuje i lagani unlock progress: prvi upis, prve interne fore, dovoljan broj upisa za budući kviz, titule ekipe i veće reunion milestoneove. To je motivacijski product state, ne stvarni kviz.
 
 Primarna akcija vodi na `/l/[slug]/upis`. Sekundarna akcija vodi na `/novi` za osobu koja želi napraviti svoj leksikon.
 
