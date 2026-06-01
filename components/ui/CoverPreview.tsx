@@ -1,6 +1,7 @@
 import { cn } from "@/lib/class-names";
 import { coverThemeOptions } from "@/lib/design";
 import { ProgressPill } from "@/components/ui/ProgressPill";
+import { Sparkle } from "@/components/ui/Sparkle";
 import { Sticker } from "@/components/ui/Sticker";
 import { Tape } from "@/components/ui/Tape";
 
@@ -46,6 +47,21 @@ export function CoverPreview({
           accentClasses[themeOption.accent],
         )}
       >
+        <Sparkle
+          className="sparkle-float absolute right-5 top-16 opacity-70"
+          size="sm"
+          tone="pink"
+        />
+        <Sparkle
+          className="sparkle-float absolute bottom-20 left-5 opacity-65 [animation-delay:1.4s]"
+          size="sm"
+          tone="blue"
+        />
+        <Sparkle
+          className="sparkle-pulse absolute bottom-7 right-7 opacity-75"
+          size="md"
+          tone="yellow"
+        />
         <div className="flex items-center justify-between gap-3">
           <ProgressPill label={themeOption.name} tone="yellow" />
           <Sticker className="rotate-6" variant="pink">

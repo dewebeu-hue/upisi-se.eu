@@ -12,6 +12,7 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { NotebookHeader } from "@/components/ui/NotebookHeader";
 import { NotebookPaper } from "@/components/ui/NotebookPaper";
 import { ProgressPill } from "@/components/ui/ProgressPill";
+import { SparkleBurst } from "@/components/ui/SparkleBurst";
 import { cn } from "@/lib/class-names";
 import { stickerOptions } from "@/lib/design";
 import {
@@ -569,7 +570,8 @@ function LoadedEditEntryForm({
           </p>
         ) : null}
         {statusMessage ? (
-          <div className="space-y-4 rounded-[1.25rem] border border-[rgba(9,139,104,0.24)] bg-[rgba(9,139,104,0.08)] p-5">
+          <div className="relative space-y-4 overflow-hidden rounded-[1.25rem] border border-[rgba(9,139,104,0.24)] bg-[rgba(9,139,104,0.08)] p-5">
+            <SparkleBurst />
             <p className="font-black text-[var(--color-success)]">
               {statusMessage}
             </p>

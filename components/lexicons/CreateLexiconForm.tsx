@@ -9,6 +9,7 @@ import { ButtonLink } from "@/components/ui/ButtonLink";
 import { CoverPreview } from "@/components/ui/CoverPreview";
 import { ProgressPill } from "@/components/ui/ProgressPill";
 import { SharePreviewCard } from "@/components/ui/SharePreviewCard";
+import { SparkleBurst } from "@/components/ui/SparkleBurst";
 import { cn } from "@/lib/class-names";
 import { coverThemeOptions, questionPackOptions } from "@/lib/design";
 import { getPublicErrorMessage } from "@/lib/errors";
@@ -236,7 +237,8 @@ function CreateLexiconFormInner() {
           title={title.trim() || "Moj leksikon"}
         />
 
-        <section className="space-y-5 rounded-[1.25rem] border border-[rgba(9,139,104,0.24)] bg-[rgba(9,139,104,0.08)] p-5 shadow-[var(--shadow-soft)]">
+        <section className="relative space-y-5 overflow-hidden rounded-[1.25rem] border border-[rgba(9,139,104,0.24)] bg-[rgba(9,139,104,0.08)] p-5 shadow-[var(--shadow-soft)]">
+          <SparkleBurst />
           <div>
             <ProgressPill label="Spremljeno" tone="success" />
             <h2 className="mt-3 text-2xl font-black text-[var(--color-ink)]">

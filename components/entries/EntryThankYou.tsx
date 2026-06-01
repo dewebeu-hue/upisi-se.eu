@@ -12,6 +12,7 @@ import { NotebookHeader } from "@/components/ui/NotebookHeader";
 import { NotebookPaper } from "@/components/ui/NotebookPaper";
 import { ProgressPill } from "@/components/ui/ProgressPill";
 import { SharePreviewCard } from "@/components/ui/SharePreviewCard";
+import { SparkleBurst } from "@/components/ui/SparkleBurst";
 import { copyTextToClipboard } from "@/lib/clipboard";
 import { coverThemeOptions } from "@/lib/design";
 import { lexiconInvitePath, newLexiconPath } from "@/lib/routes";
@@ -173,12 +174,14 @@ function EntryThankYouInner({ slug }: EntryThankYouProps) {
           <div className="flex flex-wrap gap-2">
             <ProgressPill label="Bez registracije" tone="blue" />
             <ProgressPill
+              className={lexicon.quizUnlocked ? "glitter-border" : undefined}
               label={progressLabel}
               tone={lexicon.quizUnlocked ? "success" : "yellow"}
             />
           </div>
 
-          <section className="space-y-5 rounded-[1.25rem] border border-[rgba(9,139,104,0.24)] bg-[rgba(9,139,104,0.08)] p-5 shadow-[var(--shadow-soft)]">
+          <section className="relative space-y-5 overflow-hidden rounded-[1.25rem] border border-[rgba(9,139,104,0.24)] bg-[rgba(9,139,104,0.08)] p-5 shadow-[var(--shadow-soft)]">
+            <SparkleBurst />
             <div>
               <p className="text-sm font-black uppercase tracking-[0.14em] text-[var(--color-success)]">
                 Sljedeći korak
@@ -216,6 +219,7 @@ function EntryThankYouInner({ slug }: EntryThankYouProps) {
           <section className="grid gap-4 md:grid-cols-[0.95fr_1.05fr]">
             <div className="rounded-[1.25rem] border border-[rgba(36,27,47,0.12)] bg-white/64 p-5 shadow-[var(--shadow-soft)]">
               <ProgressPill
+                className={lexicon.quizUnlocked ? "glitter-border" : undefined}
                 label={lexicon.quizUnlocked ? "Kviz je otključan" : "Još malo do kviza"}
                 tone={lexicon.quizUnlocked ? "success" : "yellow"}
               />
@@ -228,7 +232,7 @@ function EntryThankYouInner({ slug }: EntryThankYouProps) {
                   : `Kad se skupi ${lexicon.quizUnlockEntryCount} upisa, ovdje će se moći otvoriti kviz "Pogodi čiji je odgovor?". Još ${remainingEntries} do tog trenutka.`}
               </p>
               <ProgressPill
-                className="mt-4"
+                className={lexicon.quizUnlocked ? "mt-4 glitter-border" : "mt-4"}
                 label={progressLabel}
                 tone={lexicon.quizUnlocked ? "success" : "yellow"}
               />

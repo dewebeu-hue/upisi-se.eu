@@ -4,6 +4,7 @@ import { CoverPreview } from "@/components/ui/CoverPreview";
 import { ProgressPill } from "@/components/ui/ProgressPill";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { SharePreviewCard } from "@/components/ui/SharePreviewCard";
+import { Sparkle } from "@/components/ui/Sparkle";
 import { StepCard } from "@/components/ui/StepCard";
 import { BETA_LABEL, LANDING_COPY } from "@/lib/app-copy";
 import { badgeText, stepLabels } from "@/lib/design";
@@ -86,7 +87,17 @@ export default function Home() {
   return (
     <div className="w-full">
       <section className="mx-auto grid w-full max-w-6xl gap-10 px-5 py-10 sm:px-8 sm:py-14 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-14 lg:py-20">
-        <div className="max-w-2xl">
+        <div className="relative max-w-2xl">
+          <Sparkle
+            className="sparkle-float absolute -right-2 top-24 hidden opacity-70 sm:inline-flex"
+            size="lg"
+            tone="pink"
+          />
+          <Sparkle
+            className="sparkle-pulse absolute -left-3 top-44 hidden opacity-70 sm:inline-flex"
+            size="md"
+            tone="blue"
+          />
           <div className="flex flex-wrap gap-2">
             <ProgressPill label={BETA_LABEL} tone="yellow" />
             <ProgressPill label={badgeText.noRegistration} tone="blue" />

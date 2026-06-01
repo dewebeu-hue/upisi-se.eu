@@ -284,6 +284,7 @@ function AdminDashboardWithConvex({ lexiconId, token }: AdminDashboardProps) {
           <div className="flex flex-wrap gap-2">
             <ProgressPill label="Privatni link za pregled" tone="blue" />
             <ProgressPill
+              className={lexicon.quizUnlocked ? "glitter-border" : undefined}
               label={progressLabel}
               tone={lexicon.quizUnlocked ? "success" : "yellow"}
             />

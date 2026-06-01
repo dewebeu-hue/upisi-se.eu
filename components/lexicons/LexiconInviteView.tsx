@@ -132,6 +132,7 @@ export function LexiconInviteView({
               <ProgressPill label="Ovo je samo primjer pozivnice" tone="blue" />
             ) : null}
             <ProgressPill
+              className={lexicon.quizUnlocked ? "glitter-border" : undefined}
               label={entryCountLabel}
               tone={lexicon.quizUnlocked ? "success" : "yellow"}
             />

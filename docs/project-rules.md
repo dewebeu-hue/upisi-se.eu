@@ -58,3 +58,12 @@ Ova pravila vrijede za buduće promjene u projektu `Upiši se`.
 - Komponente moraju biti reusable, mobile-first i state-aware: hover, focus, active, disabled, empty, error i success stanja gdje imaju smisla.
 - Accessibility i focus-visible stanja su dio kvalitete, ne dodatak.
 - UI copy ostaje hrvatski, kratak i koristan.
+
+## Sparkle/glitter animation rules
+
+- Sparkle i glitter animacije koriste se samo kao suptilan gel-pen/Y2K polish za hero, CoverPreview, primary CTA hover, pozitivna success stanja i stvarno otključan kviz.
+- Ne koristiti sparkle animacije u form inputima dok korisnica tipka.
+- Ne koristiti sparkle u danger zone, delete flowu, privatnim/admin sigurnosnim porukama ili validacijskim greškama.
+- Dekorativni sparkle elementi moraju biti `aria-hidden` i ne smiju prenositi bitnu informaciju.
+- Animacije moraju poštovati `prefers-reduced-motion`.
+- Ne uvoditi animacijske dependencyje, canvas, GIF-ove, vanjske slike ili remote assete zbog ovog efekta.

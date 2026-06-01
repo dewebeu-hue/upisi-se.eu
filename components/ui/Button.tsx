@@ -12,7 +12,7 @@ const baseClasses =
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    "border-[var(--color-ink)] bg-[var(--color-primary)] text-[var(--color-ink)] hover:bg-[var(--color-gel-yellow)]",
+    "gel-shimmer border-[var(--color-ink)] bg-[var(--color-primary)] text-[var(--color-ink)] hover:bg-[var(--color-gel-yellow)]",
   secondary:
     "border-[rgba(36,27,47,0.24)] bg-[var(--color-paper-strong)] text-[var(--color-ink)] hover:border-[var(--color-gel-blue)] hover:text-[var(--color-gel-blue)]",
   ghost:

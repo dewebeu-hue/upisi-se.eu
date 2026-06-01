@@ -12,6 +12,7 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { NotebookHeader } from "@/components/ui/NotebookHeader";
 import { NotebookPaper } from "@/components/ui/NotebookPaper";
 import { ProgressPill } from "@/components/ui/ProgressPill";
+import { SparkleBurst } from "@/components/ui/SparkleBurst";
 import { copyTextToClipboard } from "@/lib/clipboard";
 import { cn } from "@/lib/class-names";
 import { coverThemeOptions, stickerOptions } from "@/lib/design";
@@ -354,7 +355,8 @@ function CreateEntryFormInner({ slug }: CreateEntryFormProps) {
             theme={coverTheme}
             title={lexicon.title}
           />
-          <section className="space-y-5 rounded-[1.25rem] border border-[rgba(9,139,104,0.24)] bg-[rgba(9,139,104,0.08)] p-5 shadow-[var(--shadow-soft)]">
+          <section className="relative space-y-5 overflow-hidden rounded-[1.25rem] border border-[rgba(9,139,104,0.24)] bg-[rgba(9,139,104,0.08)] p-5 shadow-[var(--shadow-soft)]">
+            <SparkleBurst />
             <ProgressPill label="Upis spremljen" tone="success" />
             <div>
               <h1 className="text-3xl font-black text-[var(--color-ink)]">
@@ -409,6 +411,7 @@ function CreateEntryFormInner({ slug }: CreateEntryFormProps) {
             </div>
 
             <ProgressPill
+              className={createdEntry.quizUnlocked ? "glitter-border" : undefined}
               label={
                 createdEntry.quizUnlocked
                   ? "Kviz je otključan"
@@ -434,6 +437,7 @@ function CreateEntryFormInner({ slug }: CreateEntryFormProps) {
           />
           <div className="rounded-[1.1rem] border border-[rgba(36,27,47,0.12)] bg-white/60 p-4">
             <ProgressPill
+              className={lexicon.quizUnlocked ? "glitter-border" : undefined}
               label={progressLabel}
               tone={lexicon.quizUnlocked ? "success" : "yellow"}
             />
