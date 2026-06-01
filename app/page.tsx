@@ -7,7 +7,7 @@ import { SharePreviewCard } from "@/components/ui/SharePreviewCard";
 import { StepCard } from "@/components/ui/StepCard";
 import { BETA_LABEL, LANDING_COPY } from "@/lib/app-copy";
 import { badgeText, stepLabels } from "@/lib/design";
-import { lexiconInvitePath, newLexiconPath } from "@/lib/routes";
+import { demoInvitePath, newLexiconPath } from "@/lib/routes";
 
 const landingTitle = "Upiši se — digitalni leksikon kao iz osnovne";
 const landingDescription =
@@ -106,7 +106,7 @@ export default function Home() {
               {LANDING_COPY.primaryCta}
             </ButtonLink>
             <ButtonLink
-              href={lexiconInvitePath("testni-leksikon")}
+              href={demoInvitePath()}
               size="lg"
               variant="secondary"
             >
@@ -125,7 +125,7 @@ export default function Home() {
           <SharePreviewCard
             description={LANDING_COPY.previewNote}
             title="Upiši se u moj digitalni leksikon"
-            urlLabel="/l/testni-leksikon"
+            urlLabel={demoInvitePath()}
           />
         </div>
       </section>

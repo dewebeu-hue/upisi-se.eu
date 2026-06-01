@@ -17,7 +17,12 @@ import { cn } from "@/lib/class-names";
 import { coverThemeOptions, stickerOptions } from "@/lib/design";
 import { getPublicErrorMessage } from "@/lib/errors";
 import { DISPLAY_NAME_MAX_LENGTH } from "@/lib/limits";
-import { DEFAULT_ENTRY_QUESTIONS, type EntryQuestion } from "@/lib/question-pack";
+import {
+  BASIC_ENTRY_QUESTIONS,
+  DEFAULT_ENTRY_QUESTIONS,
+  EXTENDED_ENTRY_QUESTIONS,
+  type EntryQuestion,
+} from "@/lib/question-pack";
 import { editEntryPath, lexiconThanksPath, newLexiconPath } from "@/lib/routes";
 import { createAbsoluteUrl } from "@/lib/share";
 
@@ -192,6 +197,7 @@ function CreateEntryFormInner({ slug }: CreateEntryFormProps) {
   const [errors, setErrors] = useState<FieldErrors>({});
   const [createdEntry, setCreatedEntry] = useState<CreatedEntry | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showExtendedQuestions, setShowExtendedQuestions] = useState(false);
   const [copyMessage, setCopyMessage] = useState("");
 
   const progressLabel =
@@ -208,9 +214,17 @@ function CreateEntryFormInner({ slug }: CreateEntryFormProps) {
     ? getCoverSticker(lexicon.theme, lexicon.coverStyle)
     : "✨";
 
-  const answerCount = useMemo(
+  const basicAnswerCount = useMemo(
     () =>
-      DEFAULT_ENTRY_QUESTIONS.filter(
+      BASIC_ENTRY_QUESTIONS.filter(
+        (question) => (answers[question.id] ?? "").trim().length > 0,
+      ).length,
+    [answers],
+  );
+
+  const extendedAnswerCount = useMemo(
+    () =>
+      EXTENDED_ENTRY_QUESTIONS.filter(
         (question) => (answers[question.id] ?? "").trim().length > 0,
       ).length,
     [answers],
@@ -347,8 +361,8 @@ function CreateEntryFormInner({ slug }: CreateEntryFormProps) {
                 Upisano ✨
               </h1>
               <p className="mt-3 text-sm leading-6 text-[var(--color-muted)]">
-                Tvoj upis je spremljen. Spremi link ispod ako želiš kasnije
-                urediti ili obrisati svoj upis.
+                Upis je spremljen — i to baš prava stranica leksikona. Spremi
+                link ispod ako želiš kasnije urediti ili obrisati svoj upis.
               </p>
             </div>
 
@@ -463,7 +477,16 @@ function CreateEntryFormInner({ slug }: CreateEntryFormProps) {
             </FieldBlock>
 
             <div className="flex flex-wrap gap-2">
-              <ProgressPill label={`${answerCount}/5 odgovora`} tone="blue" />
+              <ProgressPill
+                label={`${basicAnswerCount}/${BASIC_ENTRY_QUESTIONS.length} osnovnih odgovora`}
+                tone="blue"
+              />
+              {extendedAnswerCount > 0 ? (
+                <ProgressPill
+                  label={`${extendedAnswerCount} dodatnih uspomena`}
+                  tone="pink"
+                />
+              ) : null}
               <ProgressPill label="Bez registracije" tone="yellow" />
             </div>
           </RetroCard>
@@ -471,13 +494,14 @@ function CreateEntryFormInner({ slug }: CreateEntryFormProps) {
           <RetroCard className="space-y-6 p-5 sm:p-6" variant="paper">
             <div>
               <p className="text-sm font-black uppercase tracking-[0.14em] text-[var(--color-gel-pink)]">
-                Pitanja
+                Osnovna pitanja
               </p>
               <p className="mt-2 text-sm leading-6 text-[var(--color-muted)]">
-                Required pitanja su označena. Tajno pitanje može ostati prazno.
+                Kratki upis je sasvim dovoljan. Obavezna pitanja su označena,
+                a tajno pitanje može ostati prazno.
               </p>
             </div>
-            {DEFAULT_ENTRY_QUESTIONS.map((question) => (
+            {BASIC_ENTRY_QUESTIONS.map((question) => (
               <QuestionField
                 disabled={isSubmitting}
                 error={errors[question.id]}
@@ -492,6 +516,59 @@ function CreateEntryFormInner({ slug }: CreateEntryFormProps) {
                 value={answers[question.id] ?? ""}
               />
             ))}
+          </RetroCard>
+
+          <RetroCard className="space-y-5 p-5 sm:p-6" variant="notebook">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div>
+                <p className="text-sm font-black uppercase tracking-[0.14em] text-[var(--color-gel-purple)]">
+                  Želim ispuniti još pitanja ✨
+                </p>
+                <p className="mt-2 text-sm leading-6 text-[var(--color-muted)]">
+                  Osnovni upis je dovoljan, ali možeš dodati još uspomena ako
+                  želiš. Za slučaj da te uhvatila nostalgija.
+                </p>
+              </div>
+              <Button
+                aria-controls="extended-entry-questions"
+                aria-expanded={showExtendedQuestions}
+                disabled={isSubmitting}
+                onClick={() => setShowExtendedQuestions((current) => !current)}
+                type="button"
+                variant="secondary"
+              >
+                {showExtendedQuestions
+                  ? "Sakrij dodatna pitanja"
+                  : "Prikaži dodatna pitanja"}
+              </Button>
+            </div>
+
+            {showExtendedQuestions ? (
+              <div
+                className="space-y-6 border-t border-[rgba(36,27,47,0.12)] pt-5"
+                id="extended-entry-questions"
+              >
+                <p className="rounded-2xl border border-[rgba(36,87,214,0.15)] bg-white/55 p-4 text-sm leading-6 text-[var(--color-muted)]">
+                  Sva dodatna pitanja su opcionalna. Prazna pitanja se neće
+                  spremiti, a privatna poruka ostaje samo za vlasnicu.
+                </p>
+                {EXTENDED_ENTRY_QUESTIONS.map((question) => (
+                  <QuestionField
+                    disabled={isSubmitting}
+                    error={errors[question.id]}
+                    key={question.id}
+                    onChange={(value) =>
+                      setAnswers((current) => ({
+                        ...current,
+                        [question.id]: value,
+                      }))
+                    }
+                    question={question}
+                    value={answers[question.id] ?? ""}
+                  />
+                ))}
+              </div>
+            ) : null}
           </RetroCard>
 
           <RetroCard className="space-y-5 p-5 sm:p-6" variant="sticker">

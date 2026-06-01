@@ -11,6 +11,7 @@ Ovo je plan javnih i privatnih ruta za lokalni MVP.
 | `/l/[slug]` | Javna pozivnica leksikona | Convex query + prazno/loading/error stanje |
 | `/l/[slug]/upis` | Forma za upis prijateljice | Prva forma + Convex mutation |
 | `/l/[slug]/hvala` | Thank-you stranica nakon upisa | Javni viralni CTA bez privatnih tokena |
+| `/demo/pozivnica` | Statički primjer javne pozivnice | Demo bez Convex queryja |
 | `/admin/[lexiconId]` | Privatni admin pregled | Convex query, zahtijeva `token` query param |
 | `/e/[entryId]` | Edit/delete upisa | Convex query/mutations, zahtijeva `token` query param |
 | `/privacy` | Beta politika privatnosti | Placeholder tekst |
@@ -41,11 +42,30 @@ Metadata za ovu rutu koristi samo public-safe podatke. Ako server-side Convex do
 
 OG slika za invite link nalazi se na `/api/og/lexicon/[slug]`. Ruta smije prikazati vlasničko ime i javni poziv, ali ne smije čitati admin token, upise, edit/delete tokene ni privatne odgovore.
 
+Ako slug ne postoji, ako je leksikon obrisan ili ako Convex query ne uspije, stranica mora prikazati siguran not-found/error state bez stack tracea i internih Convex detalja.
+
+## `/demo/pozivnica` statički demo
+
+Ruta `/demo/pozivnica` je statički primjer javne pozivnice. Ne koristi Convex query, ne sprema podatke i služi kao siguran odredišni URL za landing CTA `Vidi primjer pozivnice`.
+
+Demo mora jasno reći da je riječ o primjeru. CTA `Napravi svoj leksikon` vodi na `/novi`, a demo ne glumi stvarni submit upisa.
+
+Ruta ima `noindex` i ne ulazi u sitemap jer nije SEO landing stranica.
+
 ## `/l/[slug]/upis` forma za upis
 
 Ruta `/l/[slug]/upis` je javna ruta za osobu koja je dobila invite link. Učitava public-safe leksikon po slugu preko `getPublicLexiconBySlug`, zatim sprema upis preko `createEntry`.
 
 Forma ne zahtijeva registraciju. Nakon submitanja prikazuje privatni edit/delete link koji osoba mora spremiti ako želi kasnije urediti ili obrisati svoj upis.
+
+Forma ima dvije grupe pitanja:
+
+- osnovna pitanja su odmah vidljiva i drže flow kratkim
+- dodatna pitanja su opcionalna i zatvorena po defaultu u sekciji `Želim ispuniti još pitanja ✨`
+
+Prazna dodatna pitanja se ne šalju u `answers` array. Ako je dodatno pitanje popunjeno, validira se prema svom `maxLength`. Privatno `optionalSecret` pitanje sprema se samo ako nije prazno, označeno je kao `ownerOnly` i ne ulazi u budući kviz.
+
+Ako osoba ne potvrdi consent za budući kviz, svi odgovori se spremaju s vidljivošću `ownerOnly`, čak i kada je pitanje inače quiz-eligible. Ako je consent uključen, samo neprivatna quiz-eligible pitanja mogu dobiti `quizEligible` vidljivost.
 
 Nakon uspješnog spremanja CTA `Nastavi` vodi na `/l/[slug]/hvala`. Taj thank-you flow ne smije sadržavati privatni edit/delete token.
 

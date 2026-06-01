@@ -23,6 +23,10 @@ export function lexiconInvitePath(slug: string): string {
   return `/l/${encodePathSegment(slug)}`;
 }
 
+export function demoInvitePath(): string {
+  return "/demo/pozivnica";
+}
+
 export function lexiconEntryPath(slug: string): string {
   return `/l/${encodePathSegment(slug)}/upis`;
 }

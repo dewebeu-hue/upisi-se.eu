@@ -96,6 +96,8 @@ Ne hardkodirati DNS vrijednosti u repo; koristiti vrijednosti iz Vercel domain s
 ## 7. Pre-launch QA checklist
 
 - [ ] Landing `/`.
+- [ ] Landing CTA `Vidi primjer pozivnice` otvara `/demo/pozivnica`.
+- [ ] Statički demo `/demo/pozivnica` radi bez Convexa.
 - [ ] Kreiranje leksikona na `/novi`.
 - [ ] Javni invite `/l/[slug]`.
 - [ ] Submit upisa na `/l/[slug]/upis`.
@@ -106,6 +108,7 @@ Ne hardkodirati DNS vrijednosti u repo; koristiti vrijednosti iz Vercel domain s
 - [ ] Delete leksikona.
 - [ ] Invalid admin token.
 - [ ] Invalid edit token.
+- [ ] `/l/nepostojeci-slug` prikazuje not-found state, ne Vercel crash.
 - [ ] Mobile viewport oko 375 px.
 - [ ] OG image `/api/og/lexicon/[slug]`.
 - [ ] `/robots.txt`.

@@ -1,4 +1,4 @@
-export const DEFAULT_ENTRY_QUESTIONS = [
+export const BASIC_ENTRY_QUESTIONS = [
   {
     id: "favorite-song",
     label: "Koja pjesma te odmah vrati u 90-e ili 2000-e?",
@@ -50,6 +50,117 @@ export const DEFAULT_ENTRY_QUESTIONS = [
     quizEligible: true,
     maxLength: 500,
   },
+] as const;
+
+export const EXTENDED_ENTRY_QUESTIONS = [
+  {
+    id: "favorite-outfit",
+    label: "Koji je bio tvoj najjači modni moment iz tog vremena?",
+    helperText:
+      "Traper na traper, tanke obrve, šljokice, starke, platforme... sve se priznaje.",
+    type: "shortText",
+    required: false,
+    isPrivate: false,
+    quizEligible: true,
+    maxLength: 160,
+  },
+  {
+    id: "msn-status",
+    label: "Koji bi ti bio MSN status?",
+    helperText: "Može dramatično, misteriozno ili potpuno cringe.",
+    type: "shortText",
+    required: false,
+    isPrivate: false,
+    quizEligible: true,
+    maxLength: 160,
+  },
+  {
+    id: "school-snack",
+    label: "Što si najčešće kupovala za veliki odmor?",
+    helperText: "Pecivo, sok, čokoladica, burek, sendvič...",
+    type: "shortText",
+    required: false,
+    isPrivate: false,
+    quizEligible: true,
+    maxLength: 160,
+  },
+  {
+    id: "favorite-place",
+    label: "Koje mjesto te najviše podsjeća na ekipu?",
+    helperText: "Školsko dvorište, kafić, busna stanica, disko, klupica...",
+    type: "shortText",
+    required: false,
+    isPrivate: false,
+    quizEligible: true,
+    maxLength: 160,
+  },
+  {
+    id: "most-likely-to",
+    label: "Po čemu bi te ekipa najlakše prepoznala?",
+    helperText:
+      "Primjer: uvijek kasni, uvijek organizira, uvijek zna trač, uvijek se smije.",
+    type: "shortText",
+    required: false,
+    isPrivate: false,
+    quizEligible: true,
+    maxLength: 160,
+  },
+  {
+    id: "old-phone",
+    label: "Koji mobitel ili ringtone ti je ostao u sjećanju?",
+    helperText: "Nokia, Sony Ericsson, polifone melodije, Crazy Frog...",
+    type: "shortText",
+    required: false,
+    isPrivate: false,
+    quizEligible: true,
+    maxLength: 160,
+  },
+  {
+    id: "teenage-drama",
+    label: "Koja je bila najveća drama tada, a danas ti je smiješna?",
+    helperText: "Bez imenovanja ako ne želiš.",
+    type: "longText",
+    required: false,
+    isPrivate: false,
+    quizEligible: true,
+    maxLength: 500,
+  },
+  {
+    id: "hidden-memory",
+    label: "Koja je jedna uspomena koju misliš da je samo ti pamtiš?",
+    helperText: "Može biti sitnica, interna fora ili totalna glupost.",
+    type: "longText",
+    required: false,
+    isPrivate: false,
+    quizEligible: true,
+    maxLength: 500,
+  },
+  {
+    id: "dedication",
+    label:
+      "Da joj sada pišeš u pravi papirnati leksikon, što bi napisala za kraj?",
+    helperText: "Kratka posveta, poruka ili interna rečenica.",
+    type: "longText",
+    required: false,
+    isPrivate: false,
+    quizEligible: true,
+    maxLength: 500,
+  },
+  {
+    id: "secret-note",
+    label: "Tajna poruka samo za vlasnicu leksikona",
+    helperText: "Ovo je privatno i ne ide u kviz.",
+    type: "optionalSecret",
+    required: false,
+    isPrivate: true,
+    quizEligible: false,
+    maxLength: 500,
+  },
+] as const;
+
+export const DEFAULT_ENTRY_QUESTIONS = [
+  ...BASIC_ENTRY_QUESTIONS,
+  ...EXTENDED_ENTRY_QUESTIONS,
 ] as const;
 
 export type EntryQuestion = (typeof DEFAULT_ENTRY_QUESTIONS)[number];

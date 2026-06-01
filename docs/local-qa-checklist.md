@@ -27,17 +27,23 @@ Ako ne koristiš dev seed, unesi testne podatke ručno:
 - Uloga u ekipi: `Organizatorica drame`
 - Inicijali simpatije: ostavi prazno ili upiši testne inicijale
 - Poruka za kraj: `Ovo je testni upis za lokalni QA.`
+- Dodatna pitanja: prvo ih ostavi praznima, zatim u drugom testu otvori sekciju `Želim ispuniti još pitanja ✨` i popuni barem `MSN status`, `najveća drama` i `tajna poruka`.
 
 ## B) Happy path
 
 - Otvori `/`.
+- Provjeri da CTA `Vidi primjer pozivnice` otvara `/demo/pozivnica`.
 - Otvori `/novi`.
 - Kreiraj leksikon.
 - Kopiraj javni invite link.
 - Kopiraj privatni link za pregled.
 - Otvori invite link.
 - Klikni `Upiši se`.
-- Ispuni formu.
+- Ispuni osnovna pitanja u formi.
+- Provjeri da je sekcija `Želim ispuniti još pitanja ✨` zatvorena po defaultu.
+- Pošalji upis s praznim dodatnim pitanjima i provjeri da submit nije blokiran.
+- U drugom prolazu otvori dodatna pitanja, popuni nekoliko optional odgovora i provjeri da se spremaju u admin pregledu.
+- Provjeri da `Tajna poruka samo za vlasnicu leksikona` ne ide u kviz i ostaje owner-only.
 - Spremi privatni link za uređivanje i brisanje upisa.
 - Otiđi na `/hvala`.
 - Otvori privatni link za pregled.
@@ -57,10 +63,13 @@ Ako ne koristiš dev seed, unesi testne podatke ručno:
 - Otvori `/e/[id]` bez tokena.
 - Otvori `/e/[id]?token=wrong`.
 - Otvori `/l/nepostojeci-slug`.
+- Provjeri da `/l/nepostojeci-slug` prikazuje `Leksikon nije pronađen`, a ne production crash.
 - Pokušaj submitati `/novi` bez required polja.
 - Pokušaj submitati `/l/[slug]/upis` bez required polja.
+- Otvori dodatna pitanja i ostavi ih praznima; provjeri da prazni optional odgovori ne stvaraju validation error.
 - Pokušaj predugi odgovor u formi upisa.
 - Pokušaj poslati upis bez `consentOwnerView`.
+- Isključi `consentQuizUse` i provjeri da se odgovori u adminu tretiraju kao owner-only za budući kviz.
 - Privremeno ukloni `NEXT_PUBLIC_CONVEX_URL` i provjeri missing Convex state.
 
 ## D) Privacy/security checks
@@ -93,6 +102,7 @@ Ako ne koristiš dev seed, unesi testne podatke ručno:
 
 - Otvori `/robots.txt`.
 - Otvori `/sitemap.xml`.
+- Otvori `/demo/pozivnica` i provjeri da ima `noindex`.
 - Otvori `/api/og`.
 - Otvori `/api/og/lexicon/[slug]`.
 - Provjeri da OG preview ne sadrži privatne linkove, tokene, hash vrijednosti ni odgovore.
